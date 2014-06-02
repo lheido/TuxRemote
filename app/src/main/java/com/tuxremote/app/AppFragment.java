@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlaceHolderFragment extends Fragment {
+public class AppFragment extends Fragment {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -21,15 +21,15 @@ public class PlaceHolderFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static PlaceHolderFragment newInstance(int sectionNumber) {
-        PlaceHolderFragment fragment = new PlaceHolderFragment();
+    public static AppFragment newInstance(int sectionNumber) {
+        AppFragment fragment = new AppFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public PlaceHolderFragment() {
+    public AppFragment() {
     }
 
     @Override

@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
-
-import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SeekBar.OnSeekBarChangeListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -22,6 +24,13 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    /** Volume control **/
+    /** Used to control the volume for a given stream type */
+    private SeekBar mVolumeControls;
+    /** True is the volume controls are showing, false otherwise */
+    private boolean mShowingControls;
+    private int currentVolume = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +46,22 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        // Volume
+        final View view = getLayoutInflater().inflate(R.layout.volume_action_view, null);
+        try {
+            mVolumeControls = (SeekBar) view.findViewById(R.id.volume_control);
+        }catch (Error e){
+            Toast.makeText(this, "Error findViewById for volume action view:\n"+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        if(mVolumeControls != null){
+            // Set the max range of the SeekBar to the max volume stream type
+            mVolumeControls.setMax(100);
+            // Bind the OnSeekBarChangeListener
+            mVolumeControls.setOnSeekBarChangeListener(this);
+        }
+        // Apply the custom View to the ActionBar
+        getSupportActionBar().setCustomView(view, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
     }
 
     @Override
@@ -44,7 +69,7 @@ public class MainActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceHolderFragment.newInstance(position + 1))
+                .replace(R.id.container, AppFragment.newInstance(position + 1))
                 .commit();
     }
 
@@ -92,9 +117,32 @@ public class MainActivity extends ActionBarActivity
         if (id == R.id.action_settings) {
             return true;
         }
+        if(id == R.id.action_example){
+            // Toggle the custom View's visibility
+            mShowingControls = !mShowingControls;
+            getSupportActionBar().setDisplayShowCustomEnabled(mShowingControls);
+            // Set the progress to the current volume level of the stream
+            mVolumeControls.setProgress(currentVolume);
+        }
         return super.onOptionsItemSelected(item);
     }
 
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        currentVolume = i;
+    }
 
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        Toast.makeText(this, "volume = "+currentVolume, Toast.LENGTH_SHORT).show();
+        // Remove the SeekBar from the ActionBar
+        //mShowingControls = false;
+        //getSupportActionBar().setDisplayShowCustomEnabled(false);
+    }
 }
