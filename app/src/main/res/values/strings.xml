@@ -10,5 +10,8 @@
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
     <string name="default_label_item">default text item</string>
+    <string name="action_global_volume">Volume</string>
+    <string name="action_restart">Redémarrer</string>
+    <string name="action_shutdown">Eteindre</string>
 
 </resources>

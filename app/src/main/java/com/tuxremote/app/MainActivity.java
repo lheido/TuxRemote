@@ -120,12 +120,18 @@ public class MainActivity extends ActionBarActivity
         if (id == R.id.action_settings) {
             return true;
         }
-        if(id == R.id.action_example){
+        if(id == R.id.action_global_volume){
             // Toggle the custom View's visibility
             mShowingControls = !mShowingControls;
             getSupportActionBar().setDisplayShowCustomEnabled(mShowingControls);
             // Set the progress to the current volume level of the stream
             mVolumeControls.setProgress(currentVolume);
+        }
+        if(id == R.id.action_restart){
+            return true;
+        }
+        if(id == R.id.action_shutdown){
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

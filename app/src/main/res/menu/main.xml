@@ -2,15 +2,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.tuxremote.app.MainActivity" >
-    <item android:id="@+id/action_example"
-        android:title="@string/action_example"
-        app:showAsAction="withText|ifRoom"
+    <item android:id="@+id/action_global_volume"
+        android:title="@string/action_global_volume"
+        app:showAsAction="ifRoom"
 
         />
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+    <item
+        android:id="@+id/sub"
+        android:icon="@drawable/ic_action_core_overflow"
+        app:showAsAction="ifRoom"
+        android:title=""
+        >
+        <menu>
+            <item android:id="@+id/action_restart"
+                android:title="@string/action_restart"
+                app:showAsAction="never"
+
+                />
+            <item android:id="@+id/action_shutdown"
+                android:title="@string/action_shutdown"
+                app:showAsAction="never"
+
+                />
+            <item android:id="@+id/action_settings"
+                android:title="@string/action_settings"
+                android:orderInCategory="100"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
 </menu>
 
     <!-- app:actionProviderClass="com.tuxremote.app.GlobalAction" -->
