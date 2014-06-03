@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,7 +24,7 @@ public class TuxRemoteUtils {
      * @param fileName
      * @param image    : Bitmap image format PNG only
      */
-    public static void storeImage(Context context, String fileName, Bitmap image){
+    public static void saveImageToInternalStorage(Context context, String fileName, Bitmap image){
         // Convert Bitmap to byteArray
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -43,16 +46,5 @@ public class TuxRemoteUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * load an image from internal storage
-     * @param context
-     * @param fileName
-     * @return drawable : image, use imageView.setImageDrawable(drawable);
-     */
-    public static Drawable loadImageFromInternalStorage(Context context, String fileName){
-        File filePath = context.getFileStreamPath(fileName);
-        return Drawable.createFromPath(filePath.toString());
     }
 }
