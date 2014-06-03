@@ -18,6 +18,9 @@ import java.io.IOException;
  */
 public class TuxRemoteUtils {
 
+    public final static String SPLIT_CHAR = ":";
+    public final static int DEFAULT_CLOSE_RES = R.drawable.ic_action_content_remove;
+    public final static int DEFAULT_ICON_APP = R.drawable.ic_launcher;
     /**
      * Write image to internal storage
      * @param context

@@ -17,8 +17,6 @@ public class Command {
     public String name = null;
     public String cmd = null;
     public String icon = null;
-    public int res = R.drawable.ic_action_content_remove;
-    private final static String SPLIT_CHAR = ":";
 
     /**
      * Constructor 1
@@ -35,9 +33,9 @@ public class Command {
     public void setIconToView(Context context, ImageView view){
         if(this.icon != null){
             File filePath = context.getFileStreamPath(this.icon);
-            Picasso.with(context).load(filePath).into(view);
+            Picasso.with(context).load(filePath).resize(view.getWidth(), view.getHeight()).into(view);
         }else{
-            Picasso.with(context).load(this.res).into(view);
+            Picasso.with(context).load(TuxRemoteUtils.DEFAULT_CLOSE_RES).resize(view.getWidth(), view.getHeight()).into(view);
         }
     }
 
@@ -48,7 +46,7 @@ public class Command {
     public static ArrayList<Command> createCmdsList(ArrayList<String> list){
         ArrayList<Command> cmds = new ArrayList<Command>();
         for (int i = 0; i < list.size(); i++) {
-            String[] item = list.get(i).split(SPLIT_CHAR);
+            String[] item = list.get(i).split(TuxRemoteUtils.SPLIT_CHAR);
             String name = item[0];
             String cmd = item[1];
             String icon = null;
@@ -57,5 +55,9 @@ public class Command {
             cmds.add(new Command(name, cmd, icon));
         }
         return cmds;
+    }
+
+    public String getName(){
+        return this.name;
     }
 }

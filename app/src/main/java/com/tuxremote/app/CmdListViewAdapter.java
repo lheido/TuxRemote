@@ -11,18 +11,18 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by lheido on 25/05/14.
+ * Created by lheido on 04/06/14.
  */
-public class TuxListViewAdapter extends BaseAdapter {
+public class CmdListViewAdapter extends BaseAdapter {
     private final Activity context;
-    private final ArrayList<?> items;
+    private final ArrayList<Command> items;
 
     static class ViewHolder {
         public TextView text;
         public ImageView image;
     }
 
-    public TuxListViewAdapter(Activity context, ArrayList<?> items){
+    public CmdListViewAdapter(Activity context, ArrayList<Command> items){
         this.context = context;
         this.items = items;
     }
@@ -50,21 +50,15 @@ public class TuxListViewAdapter extends BaseAdapter {
             // configure view holder
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.text = (TextView) rowView.findViewById(R.id.label);
-            viewHolder.image = (ImageView) rowView
-                    .findViewById(R.id.icon);
+            viewHolder.image = (ImageView) rowView.findViewById(R.id.icon);
             rowView.setTag(viewHolder);
         }
 
         // fill data
         ViewHolder holder = (ViewHolder) rowView.getTag();
-        Object o = this.items.get(position);
-        //holder.text.setText(s);
-        //if (s.startsWith("Windows7") || s.startsWith("iPhone")
-        //        || s.startsWith("Solaris")) {
-            //holder.image.setImageResource(R.drawable.no);
-        //} else {
-            //holder.image.setImageResource(R.drawable.ok);
-        //}
+        Command cmd = this.items.get(position);
+        holder.text.setText(cmd.getName());
+        cmd.setIconToView(context, holder.image);
 
         return rowView;
     }
