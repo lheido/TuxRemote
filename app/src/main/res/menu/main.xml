@@ -2,14 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.tuxremote.app.MainActivity" >
+
     <item android:id="@+id/action_global_volume"
         android:title="@string/action_global_volume"
         app:showAsAction="ifRoom"
-
+        android:icon="@drawable/ic_action_device_access_volume_on"
         />
     <item
         android:id="@+id/sub"
-        android:icon="@drawable/ic_action_core_overflow"
+        android:icon="@drawable/abc_ic_menu_moreoverflow_normal_holo_dark"
         app:showAsAction="ifRoom"
         android:title=""
         >
@@ -17,12 +18,10 @@
             <item android:id="@+id/action_restart"
                 android:title="@string/action_restart"
                 app:showAsAction="never"
-
                 />
             <item android:id="@+id/action_shutdown"
                 android:title="@string/action_shutdown"
                 app:showAsAction="never"
-
                 />
             <item android:id="@+id/action_settings"
                 android:title="@string/action_settings"
