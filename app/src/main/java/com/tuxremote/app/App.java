@@ -1,13 +1,14 @@
 package com.tuxremote.app;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by lheido on 03/06/14.
@@ -55,4 +56,34 @@ public class App {
     public void setTitle(String title){
         this.title = title;
     }
+    public ArrayList<Command> getCmds(){
+        return this.cmds;
+    }
+
+    public static abstract class ListAppTask extends AsyncTask<Void, Void, Boolean>{
+
+        private ArrayList<App> listApp = null;
+
+        ListAppTask(){
+            listApp = new ArrayList<App>();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            // create app liste with wmctrl
+            return true;
+        }
+
+        @Override
+        abstract protected void onPostExecute(Boolean result);
+
+        public void execTask(){
+            if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
+                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                execute();
+            }
+        }
+    }
+
 }

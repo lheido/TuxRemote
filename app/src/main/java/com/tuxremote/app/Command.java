@@ -1,11 +1,11 @@
 package com.tuxremote.app;
 
 import android.content.Context;
-import android.view.View;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ public class Command {
 
     /**
      * Constructor 1
-     * @param name : String, command name
-     * @param cmd  : String, command shell
+     * @param name : String, command name.
+     * @param cmd  : String, command shell.
      * @param icon : int, drawable ressource like "R.drawable.ressource", default close icon for icon = 0.
      */
     public Command(String name, String cmd, String icon){
@@ -45,12 +45,12 @@ public class Command {
 
     public static ArrayList<Command> createCmdsList(ArrayList<String> list){
         ArrayList<Command> cmds = new ArrayList<Command>();
-        for (int i = 0; i < list.size(); i++) {
-            String[] item = list.get(i).split(TuxRemoteUtils.SPLIT_CHAR);
+        for (String aList : list) {
+            String[] item = aList.split(TuxRemoteUtils.SPLIT_CHAR);
             String name = item[0];
             String cmd = item[1];
             String icon = null;
-            if(item.length == 3)
+            if (item.length == 3)
                 icon = item[2];
             cmds.add(new Command(name, cmd, icon));
         }
@@ -60,4 +60,31 @@ public class Command {
     public String getName(){
         return this.name;
     }
+
+    public static abstract class ListCmdTask extends AsyncTask<Void, Void, Boolean> {
+
+        private ArrayList<App> listCmd = null;
+
+        ListCmdTask(){
+            listCmd = new ArrayList<App>();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            // create app liste with wmctrl
+            return true;
+        }
+
+        @Override
+        abstract protected void onPostExecute(Boolean result);
+
+        public void execTask(){
+            if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
+                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                execute();
+            }
+        }
+    }
+
 }

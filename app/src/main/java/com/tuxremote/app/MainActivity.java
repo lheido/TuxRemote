@@ -51,20 +51,19 @@ public class MainActivity extends ActionBarActivity
 
         // Volume
         final View view = getLayoutInflater().inflate(R.layout.volume_action_view, null);
-        try {
+        if(view != null) {
             mVolumeControls = (SeekBar) view.findViewById(R.id.volume_control);
-        }catch (Error e){
-            Toast.makeText(this, "Error findViewById for volume action view:\n"+e.getMessage(), Toast.LENGTH_SHORT).show();
+            if (mVolumeControls != null) {
+                // Set the max range of the SeekBar to the max volume stream type
+                mVolumeControls.setMax(100);
+                // Bind the OnSeekBarChangeListener
+                mVolumeControls.setOnSeekBarChangeListener(this);
+            } else {
+                Toast.makeText(this, "Error findViewById for volume action view", Toast.LENGTH_SHORT).show();
+            }
+            // Apply the custom View to the ActionBar
+            getSupportActionBar().setCustomView(view, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
-        if(mVolumeControls != null){
-            // Set the max range of the SeekBar to the max volume stream type
-            mVolumeControls.setMax(100);
-            // Bind the OnSeekBarChangeListener
-            mVolumeControls.setOnSeekBarChangeListener(this);
-        }
-        // Apply the custom View to the ActionBar
-        getSupportActionBar().setCustomView(view, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
     }
 
     @Override
