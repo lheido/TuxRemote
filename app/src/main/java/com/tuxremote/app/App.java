@@ -70,7 +70,7 @@ public class App {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            // create app liste with wmctrl
+            // create app liste with wmctrl -lpx
             return true;
         }
 
