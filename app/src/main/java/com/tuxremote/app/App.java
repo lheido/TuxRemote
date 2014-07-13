@@ -62,10 +62,10 @@ public class App {
 
     public static abstract class ListAppTask extends AsyncTask<Void, Void, Boolean>{
 
-        private ArrayList<App> listApp = null;
+        protected ArrayList<App> _listApp = null;
 
         ListAppTask(){
-            listApp = new ArrayList<App>();
+            _listApp = new ArrayList<App>();
         }
 
         @Override
@@ -85,5 +85,4 @@ public class App {
             }
         }
     }
-
 }

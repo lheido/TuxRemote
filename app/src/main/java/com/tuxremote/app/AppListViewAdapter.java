@@ -1,6 +1,7 @@
 package com.tuxremote.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  * Created by lheido on 25/05/14.
  */
 public class AppListViewAdapter extends BaseAdapter {
-    private final Activity context;
+    private final Context context;
     private final ArrayList<App> items;
 
     static class ViewHolder {
@@ -22,7 +23,7 @@ public class AppListViewAdapter extends BaseAdapter {
         public ImageView image;
     }
 
-    public AppListViewAdapter(Activity context, ArrayList<App> items){
+    public AppListViewAdapter(Context context, ArrayList<App> items){
         this.context = context;
         this.items = items;
     }
@@ -44,18 +45,16 @@ public class AppListViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View rowView = convertView;
         // reuse views
-        if (rowView == null) {
-            LayoutInflater inflater = context.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.rowlayout, null);
-            // configure view holder
-            ViewHolder viewHolder = new ViewHolder();
-            viewHolder.text = (TextView) rowView.findViewById(R.id.label);
-            viewHolder.image = (ImageView) rowView.findViewById(R.id.icon);
-            rowView.setTag(viewHolder);
-        }
-
+        ViewHolder holder;
+        if(convertView == null){
+            holder = new ViewHolder();
+            convertView = LayoutInflater.from(context).inflate(R.layout.rowlayout, parent, false);
+            holder.text = (TextView) convertView.findViewById(R.id.label);
+            holder.image = (ImageView) convertView.findViewById(R.id.icon);
+            convertView.setTag(holder);
+        } else
+            holder = (ViewHolder) convertView.getTag();
         // fill data
-        ViewHolder holder = (ViewHolder) rowView.getTag();
         App app = this.items.get(position);
         holder.text.setText(app.getTitle());
         app.setIconToView(context, holder.image);

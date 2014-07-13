@@ -39,6 +39,15 @@ public class Command {
         }
     }
 
+    public String getName(){
+        return this.name;
+    }
+
+    public ArrayList<String> exec(){
+//        return session.setCommand("exec", this.cmd);
+        return new ArrayList<String>();
+    }
+
     public static Command cmdClose(String hexaId){
         return new Command("close", "wmctrl -i -c "+hexaId, null);
     }
@@ -55,10 +64,6 @@ public class Command {
             cmds.add(new Command(name, cmd, icon));
         }
         return cmds;
-    }
-
-    public String getName(){
-        return this.name;
     }
 
     public static abstract class ListCmdTask extends AsyncTask<Void, Void, Boolean> {

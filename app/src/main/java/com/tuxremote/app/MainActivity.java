@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
@@ -34,6 +35,8 @@ public class MainActivity extends ActionBarActivity
     /** True is the volume controls are showing, false otherwise */
     private boolean mShowingControls;
     private int currentVolume = 0;
+
+    protected App currentApp = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,9 +130,11 @@ public class MainActivity extends ActionBarActivity
             mVolumeControls.setProgress(currentVolume);
         }
         if(id == R.id.action_restart){
+//            TuxRemoteUtils.CMD_RESTART
             return true;
         }
         if(id == R.id.action_shutdown){
+//            TuxRemoteUtils.CMD_SHUTDOWN
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -139,12 +144,11 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         currentVolume = i;
+//        Log.v("onProgressChanged",""+i);
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
+    public void onStartTrackingTouch(SeekBar seekBar) {}
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
