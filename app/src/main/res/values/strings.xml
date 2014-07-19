@@ -13,5 +13,6 @@
     <string name="action_global_volume">Volume</string>
     <string name="action_restart">Redémarrer</string>
     <string name="action_shutdown">Eteindre</string>
+    <string name="action_kill_all">Fermer toutes les app</string>
 
 </resources>

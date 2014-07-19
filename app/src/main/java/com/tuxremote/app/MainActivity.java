@@ -4,7 +4,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
@@ -106,7 +105,12 @@ public class MainActivity extends ActionBarActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
+            int layout;
+            if(Global.userIsConnected())
+                layout = R.menu.main;
+            else
+                layout = R.menu.disconnect;
+            getMenuInflater().inflate(layout, menu);
             restoreActionBar();
             return true;
         }

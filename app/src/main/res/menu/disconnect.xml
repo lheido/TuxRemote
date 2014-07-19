@@ -3,11 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.tuxremote.app.MainActivity" >
 
-    <item android:id="@+id/action_global_volume"
-        android:title="@string/action_global_volume"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_device_access_volume_on"
-        />
     <item
         android:id="@+id/sub"
         android:icon="@drawable/abc_ic_menu_moreoverflow_normal_holo_dark"
@@ -15,18 +10,7 @@
         android:title=""
         >
         <menu>
-            <item android:id="@+id/action_restart"
-                android:title="@string/action_restart"
-                app:showAsAction="never"
-                />
-            <item android:id="@+id/action_shutdown"
-                android:title="@string/action_shutdown"
-                app:showAsAction="never"
-                />
-            <item android:id="@+id/action_kill_all"
-                android:title="@string/action_kill_all"
-                app:showAsAction="never"
-                />
+
             <item android:id="@+id/action_settings"
                 android:title="@string/action_settings"
                 android:orderInCategory="100"
