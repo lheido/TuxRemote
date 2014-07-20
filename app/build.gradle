@@ -25,5 +25,5 @@ dependencies {
     compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar-abc:3.1.2'
     compile 'com.jcraft:jsch:0.1.51'
     compile 'com.squareup.picasso:picasso:2.3.1'
-    compile 'com.madgag:android-pinned-header-listviews:0.4'
+    compile 'se.emilsjolander:stickylistheaders:2.4.1'
 }

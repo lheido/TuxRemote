@@ -51,6 +51,8 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        if(!Global.userIsConnected()) disconnectFragment();
+
         // Volume
         final View view = getLayoutInflater().inflate(R.layout.volume_action_view, null);
         if(view != null) {
@@ -77,18 +79,15 @@ public class MainActivity extends ActionBarActivity
                 .commit();
     }
 
+    public void disconnectFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, ConnectFragment.newInstance())
+                .commit();
+    }
+
     public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
+        mTitle = "App "+number;
     }
 
     public void restoreActionBar() {
@@ -126,19 +125,22 @@ public class MainActivity extends ActionBarActivity
         if (id == R.id.action_settings) {
             return true;
         }
-        if(id == R.id.action_global_volume){
+        else if(id == R.id.action_global_volume){
             // Toggle the custom View's visibility
             mShowingControls = !mShowingControls;
             getSupportActionBar().setDisplayShowCustomEnabled(mShowingControls);
             // Set the progress to the current volume level of the stream
             mVolumeControls.setProgress(currentVolume);
         }
-        if(id == R.id.action_restart){
+        else if(id == R.id.action_restart){
 //            TuxRemoteUtils.CMD_RESTART
             return true;
         }
-        if(id == R.id.action_shutdown){
+        else if(id == R.id.action_shutdown){
 //            TuxRemoteUtils.CMD_SHUTDOWN
+            return true;
+        }
+        else if(id == R.id.action_add_server){
             return true;
         }
         return super.onOptionsItemSelected(item);
