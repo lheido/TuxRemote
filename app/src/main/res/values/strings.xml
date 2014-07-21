@@ -15,5 +15,6 @@
     <string name="action_shutdown">Eteindre</string>
     <string name="action_kill_all">Fermer toutes les app</string>
     <string name="action_add_server">Ajouter un server</string>
+    <string name="cmd_icon">cmd icon</string>
 
 </resources>

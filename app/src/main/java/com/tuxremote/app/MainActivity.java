@@ -71,11 +71,11 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
+    public void onNavigationDrawerItemSelected(int position, String appName) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, AppFragment.newInstance(position + 1))
+                .replace(R.id.container, AppFragment.newInstance(position, appName))
                 .commit();
     }
 

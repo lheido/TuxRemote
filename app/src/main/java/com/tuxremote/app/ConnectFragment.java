@@ -6,15 +6,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
-
 public class ConnectFragment extends Fragment {
     private ArrayList<Server> servers;
+    private ListView listView;
+    private ConnectAdapter adapter;
 
     public static ConnectFragment newInstance() {
         return new ConnectFragment();
@@ -25,50 +27,75 @@ public class ConnectFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.connect_fragment, container, false);
-        StickyListHeadersListView stickyList = (StickyListHeadersListView) rootView.findViewById(R.id.list);
-        Adapter adapter = new Adapter(getActivity().getApplicationContext(), servers);
-        stickyList.setAdapter(adapter);
+        if(rootView != null) {
+            listView = (ListView) rootView.findViewById(R.id.list);
+            adapter = new ConnectAdapter(getActivity().getApplicationContext(), servers);
+            listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    // connect at this server <position>
+                }
+            });
+            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    // manage server info at <position>
+                    return true;
+                }
+            });
+        }
         return rootView;
     }
 
-    private static class Adapter extends BaseAdapter implements StickyListHeadersAdapter {
+    private static class ConnectAdapter extends BaseAdapter {
 
         private final Context context;
         private final ArrayList<Server> list;
 
-        Adapter(Context c, ArrayList<Server> liste){
+        ConnectAdapter(Context c, ArrayList<Server> servers){
             context = c;
-            list = liste;
-        }
-
-        @Override
-        public View getHeaderView(int i, View view, ViewGroup viewGroup) {
-            return null;
-        }
-
-        @Override
-        public long getHeaderId(int i) {
-            return 0;
+            list = servers;
         }
 
         @Override
         public int getCount() {
-            return 0;
+            return list.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return null;
+            return list.get(i);
         }
 
         @Override
         public long getItemId(int i) {
-            return 0;
+            return i;
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            return null;
+        public View getView(int position, View convertView, ViewGroup viewGroup) {
+            Server server = (Server) this.getItem(position);
+            ViewHolder holder;
+            if(convertView == null)
+            {
+                holder = new ViewHolder();
+                convertView = LayoutInflater.from(context).inflate(R.layout.server, viewGroup, false);
+                holder.name = (TextView) convertView.findViewById(R.id.name);
+                holder.ip = (TextView) convertView.findViewById(R.id.ip_address);
+                convertView.setTag(holder);
+            }
+            else
+                holder = (ViewHolder) convertView.getTag();
+
+            holder.name.setText(server.getName());
+            holder.ip.setText(server.getIp());
+            return convertView;
+        }
+
+        private class ViewHolder {
+            public TextView name;
+            public TextView ip;
         }
     }
 }

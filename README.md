@@ -16,9 +16,15 @@ cmd_name:cmd_sh:icon_path
 ```
 
 ##ToDo
+ - Revoir l'histoire avec la liste des commandes
  - NavigationDrawer:
     - itemLongClick -> menu (kill all without it/etc...)
     - swipeToDismiss
+ - Settings
+    - save server's password into database (check).
+    - about TuxRemote
+    - Connexion auto with default server (maybe later).
+ 
 
 ##Commands
  - Shutdown:

@@ -10,16 +10,13 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Created by lheido on 03/06/14.
- */
 public class Command {
     public String name = null;
     public String cmd = null;
     public String icon = null;
 
     /**
-     * Constructor 1
+     * Constructor
      * @param name : String, command name.
      * @param cmd  : String, command shell.
      * @param icon : int, drawable ressource like "R.drawable.ressource", default close icon for icon = 0.
