@@ -15,6 +15,11 @@ Android app to control your linux desktop via ssh (with Jsch).
 cmd_name:cmd_sh:icon_path
 ```
 
+##ToDo
+ - NavigationDrawer:
+    - itemLongClick -> menu (kill all without it/etc...)
+    - swipeToDismiss
+
 ##Commands
  - Shutdown:
 ```
