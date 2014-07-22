@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 
 /**
  * Created by lheido on 03/06/14.
@@ -37,6 +38,10 @@ public class TuxRemoteUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void saveFileToInternalStorage(Context context, String fileName, String content){
+
     }
 
     public final static String CMD_RESTART  = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart";

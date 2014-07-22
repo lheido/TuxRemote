@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -25,19 +26,29 @@ public class AppFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_APP_NAME = "app_name";
+    private static final String ARG_HEXAID = "hexaId";
+    private static final String ARG_TITLE = "window_title";
+    private static final String ARG_PID = "app_pid";
     private AppAdapter adapter;
     private ListView listView;
     private ArrayList<Command> cmds;
+    private String appName;
+    private String appHexaId;
+    private String appTitle;
+    private String appPid;
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static AppFragment newInstance(int sectionNumber, String appName) {
+    public static AppFragment newInstance(int sectionNumber, App app) {
         AppFragment fragment = new AppFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        args.putString(ARG_APP_NAME, appName);
+        args.putString(ARG_APP_NAME, app.getName());
+        args.putString(ARG_HEXAID, app.getHexaId());
+        args.putString(ARG_TITLE, app.getTitle());
+        args.putString(ARG_PID, app.getPid());
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,6 +59,12 @@ public class AppFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        appName = getArguments().getString(ARG_APP_NAME);
+        appHexaId = getArguments().getString(ARG_HEXAID);
+        appTitle = getArguments().getString(ARG_TITLE);
+        appPid = getArguments().getString(ARG_PID);
+        cmds.clear();
+        cmds.addAll(loadFromConfigFile(appName, appHexaId));
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         if(rootView != null){
             listView = (ListView) rootView.findViewById(R.id.list);
@@ -61,6 +78,15 @@ public class AppFragment extends Fragment {
             });
         }
         return rootView;
+    }
+
+    private static ArrayList<Command> loadFromConfigFile(String appName, String appHexaId) {
+        ArrayList<Command> list = new ArrayList<Command>();
+        //retrieve commands list for appName into config file
+        //use static methode Command.createCmdsList(cmd_string_arrayList)
+        //or use static methode Command.newCommand(cmd_string_line_from_config_file)
+        //use static methode Command.cmdClose(appHexaId) to add close command at the end of list
+        return list;
     }
 
     @Override

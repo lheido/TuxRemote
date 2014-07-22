@@ -49,7 +49,7 @@ public class Command {
         return new Command("close", "wmctrl -i -c "+hexaId, null);
     }
 
-    public static ArrayList<Command> createCmdsList(ArrayList<String> list){
+    public static ArrayList<Command> createCmdsList(final ArrayList<String> list){
         ArrayList<Command> cmds = new ArrayList<Command>();
         for (String aList : list) {
             String[] item = aList.split(TuxRemoteUtils.SPLIT_CHAR);
@@ -61,6 +61,16 @@ public class Command {
             cmds.add(new Command(name, cmd, icon));
         }
         return cmds;
+    }
+
+    public static Command newCommand(final String cmdLineFromConfigFile){
+        String[] item = cmdLineFromConfigFile.split(TuxRemoteUtils.SPLIT_CHAR);
+        String name = item[0];
+        String cmd = item[1];
+        String icon = null;
+        if (item.length == 3)
+            icon = item[2];
+        return new Command(name, cmd, icon);
     }
 
     public static abstract class ListCmdTask extends AsyncTask<Void, Void, Boolean> {

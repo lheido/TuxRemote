@@ -11,29 +11,26 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class App {
+    private String name = null;
     private String id = null; // wmctrl identifier in hexadecimal.
     private String pid = null;
     private String title = null;
     private String icon = null;
-    private ArrayList<Command> cmds = new ArrayList<Command>();
 
     /**
      * Constructor
      * @param hexaId : wmctrl id in hexa.
      * @param pid    : pid.
-     * @param title  : app name.
+     * @param name   : app name
+     * @param title  : window title.
      * @param icon   : app icon.
-     * @param cmds   : app commands list.
      */
-    public App(String hexaId, String pid, String title, String icon, ArrayList<Command> cmds){
+    public App(String hexaId, String pid, String name, String title, String icon){
         this.id = hexaId;
         this.pid = pid;
+        this.name = name;
         this.title = title;
         this.icon = icon;
-        if(cmds != null)
-            this.cmds.addAll(cmds);
-        // add cmd close at the end of cmds list!
-        this.cmds.add(Command.cmdClose(this.id));
     }
 
     public void setIconToView(Context context, ImageView view){
@@ -56,6 +53,9 @@ public class App {
     public String getTitle(){
         return this.title;
     }
+    public String getName(){
+        return this.name;
+    }
 
     public void setHexaId(String id){
         this.id = id;
@@ -68,9 +68,8 @@ public class App {
     public void setTitle(String title){
         this.title = title;
     }
-
-    public ArrayList<Command> getCmds(){
-        return this.cmds;
+    public void setName(String n){
+        this.name = n;
     }
 
     public static abstract class ListAppTask extends AsyncTask<Void, Void, Boolean>{

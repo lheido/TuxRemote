@@ -11,7 +11,7 @@ Android app to control your linux desktop via ssh (with Jsch).
 ##TuxRemote.config
 
 ```config
-[APP NAME]
+[APP NAME:wmctrl_name]
 cmd_name:cmd_sh:icon_path
 ```
 
