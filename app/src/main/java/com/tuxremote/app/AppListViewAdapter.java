@@ -1,6 +1,5 @@
 package com.tuxremote.app;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +18,9 @@ public class AppListViewAdapter extends BaseAdapter {
     private final ArrayList<App> items;
 
     static class ViewHolder {
-        public TextView text;
         public ImageView image;
+        public TextView app_name;
+        public TextView window_title;
     }
 
     public AppListViewAdapter(Context context, ArrayList<App> items){
@@ -43,22 +43,23 @@ public class AppListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View rowView = convertView;
         // reuse views
         ViewHolder holder;
         if(convertView == null){
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.rowlayout, parent, false);
-            holder.text = (TextView) convertView.findViewById(R.id.label);
+            convertView = LayoutInflater.from(context).inflate(R.layout.row_app, parent, false);
+            holder.app_name = (TextView) convertView.findViewById(R.id.app_name);
+            holder.window_title = (TextView) convertView.findViewById(R.id.window_title);
             holder.image = (ImageView) convertView.findViewById(R.id.icon);
             convertView.setTag(holder);
         } else
             holder = (ViewHolder) convertView.getTag();
         // fill data
         App app = this.items.get(position);
-        holder.text.setText(app.getTitle());
+        holder.app_name.setText(app.getName());
+        holder.window_title.setText(app.getTitle());
         app.setIconToView(context, holder.image);
 
-        return rowView;
+        return convertView;
     }
 }

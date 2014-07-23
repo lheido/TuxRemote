@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +14,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Collection;
+//import com.manuelpeinado.fadingactionbar.FadingActionBarHelperBase;
+//import com.manuelpeinado.fadingactionbar.extras.actionbarcompat.FadingActionBarHelper;
+//import com.squareup.picasso.Picasso;
 
-/**
- * A placeholder fragment containing a simple view.
- */
+import java.util.ArrayList;
+
 public class AppFragment extends Fragment {
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
-    private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_APP_NAME = "app_name";
     private static final String ARG_HEXAID = "hexaId";
     private static final String ARG_TITLE = "window_title";
@@ -36,15 +32,16 @@ public class AppFragment extends Fragment {
     private String appHexaId;
     private String appTitle;
     private String appPid;
+    private Context context;
+//    private FadingActionBarHelperBase mFadingHelper;
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static AppFragment newInstance(int sectionNumber, App app) {
+    public static AppFragment newInstance(App app) {
         AppFragment fragment = new AppFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         args.putString(ARG_APP_NAME, app.getName());
         args.putString(ARG_HEXAID, app.getHexaId());
         args.putString(ARG_TITLE, app.getTitle());
@@ -57,17 +54,21 @@ public class AppFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        appName = getArguments().getString(ARG_APP_NAME);
-        appHexaId = getArguments().getString(ARG_HEXAID);
-        appTitle = getArguments().getString(ARG_TITLE);
-        appPid = getArguments().getString(ARG_PID);
-        cmds.clear();
+        cmds = new ArrayList<Command>();
         cmds.addAll(loadFromConfigFile(appName, appHexaId));
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        if(rootView != null){
-            listView = (ListView) rootView.findViewById(R.id.list);
+//        View view = mFadingHelper.createView(inflater);
+//        ImageView img = (ImageView) view.findViewById(R.id.image_header);
+//        Picasso.with(getActivity().getApplicationContext()).load(TuxRemoteUtils.DEFAULT_ICON_APP).fit().centerInside().into(img);
+        View view = inflater.inflate(R.layout.app_fragment, container, false);
+        if(view != null) {
+            listView = (ListView) view.findViewById(R.id.cmd_list);
             adapter = new AppAdapter(getActivity().getApplicationContext(), cmds);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,7 +78,7 @@ public class AppFragment extends Fragment {
                 }
             });
         }
-        return rootView;
+        return view;
     }
 
     private static ArrayList<Command> loadFromConfigFile(String appName, String appHexaId) {
@@ -86,14 +87,25 @@ public class AppFragment extends Fragment {
         //use static methode Command.createCmdsList(cmd_string_arrayList)
         //or use static methode Command.newCommand(cmd_string_line_from_config_file)
         //use static methode Command.cmdClose(appHexaId) to add close command at the end of list
+        list.add(Command.cmdClose(appHexaId));
         return list;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
+        appName = getArguments().getString(ARG_APP_NAME);
+        appHexaId = getArguments().getString(ARG_HEXAID);
+        appTitle = getArguments().getString(ARG_TITLE);
+        appPid = getArguments().getString(ARG_PID);
+        ((MainActivity) activity).onSectionAttached(appName);
+        context = ((MainActivity) activity).getApplicationContext();
+//        mFadingHelper = new FadingActionBarHelper()
+//                .actionBarBackground(R.drawable.ab_background)
+//                .headerLayout(R.layout.app_header)
+//                .contentLayout(R.layout.app_cmds)
+//                .lightActionBar(false);
+//        mFadingHelper.initActionBar(activity);
     }
 
     private static class AppAdapter extends BaseAdapter {
@@ -128,7 +140,7 @@ public class AppFragment extends Fragment {
             if(convertView == null)
             {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(context).inflate(R.layout.command, viewGroup, false);
+                convertView = LayoutInflater.from(context).inflate(R.layout.row_cmd, viewGroup, false);
                 holder.name = (TextView) convertView.findViewById(R.id.cmd_name);
                 holder.icon = (ImageView) convertView.findViewById(R.id.icon);
                 convertView.setTag(holder);

@@ -1,14 +1,19 @@
 package com.tuxremote.app;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -36,12 +41,13 @@ public class MainActivity extends ActionBarActivity
     private int currentVolume = 0;
 
     protected App currentApp = null;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        context = this;
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -71,12 +77,14 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position, String appName) {
+    public void onNavigationDrawerItemSelected(int position, App app) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, AppFragment.newInstance(position, appName))
+                .replace(R.id.container, AppFragment.newInstance(app))
                 .commit();
+        currentApp = app;
+        setActionBarTitle(app.getName());
     }
 
     public void disconnectFragment(){
@@ -86,8 +94,8 @@ public class MainActivity extends ActionBarActivity
                 .commit();
     }
 
-    public void onSectionAttached(int number) {
-        mTitle = "App "+number;
+    public void onSectionAttached(String name) {
+        setActionBarTitle(name);
     }
 
     public void restoreActionBar() {
@@ -141,6 +149,19 @@ public class MainActivity extends ActionBarActivity
             return true;
         }
         else if(id == R.id.action_add_server){
+            TuxRemoteUtils.TuxRemoteDialog newServerDialog = new TuxRemoteUtils.TuxRemoteDialog(
+                    context, R.layout.new_server, "Nouveau serveur") {
+                @Override
+                public void customOk() {
+                    EditText entryName = (EditText)this.findViewById(R.id.entry_name);
+                    EditText entryIp = (EditText)this.findViewById(R.id.entry_ip);
+                    EditText entryPassword = (EditText)this.findViewById(R.id.entry_password);
+                    Log.v("CustomDialog", entryName.getText().toString()+", "+
+                                          entryIp.getText().toString()+", "+
+                                          entryPassword.getText().toString());
+                }
+            };
+            newServerDialog.show();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -162,5 +183,10 @@ public class MainActivity extends ActionBarActivity
         // Remove the SeekBar from the ActionBar
         //mShowingControls = false;
         //getSupportActionBar().setDisplayShowCustomEnabled(false);
+    }
+
+    public void setActionBarTitle(String actionBarTitle) {
+        mTitle = actionBarTitle;
+        restoreActionBar();
     }
 }

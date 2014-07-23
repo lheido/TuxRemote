@@ -30,9 +30,9 @@ public class Command {
     public void setIconToView(Context context, ImageView view){
         if(this.icon != null){
             File filePath = context.getFileStreamPath(this.icon);
-            Picasso.with(context).load(filePath).resize(view.getWidth(), view.getHeight()).into(view);
+            Picasso.with(context).load(filePath).fit().centerInside().into(view);
         }else{
-            Picasso.with(context).load(TuxRemoteUtils.DEFAULT_CLOSE_RES).resize(view.getWidth(), view.getHeight()).into(view);
+            Picasso.with(context).load(TuxRemoteUtils.DEFAULT_CLOSE_RES).fit().centerInside().into(view);
         }
     }
 

@@ -1,16 +1,18 @@
 package com.tuxremote.app;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.util.ArrayList;
 
-/**
- * Created by lheido on 03/06/14.
- */
 public class TuxRemoteUtils {
 
     public final static String SPLIT_CHAR = ":";
@@ -46,5 +48,26 @@ public class TuxRemoteUtils {
 
     public final static String CMD_RESTART  = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart";
     public final static String CMD_SHUTDOWN = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager  org.freedesktop.ConsoleKit.Manager.Stop";
+
+    public static abstract class TuxRemoteDialog extends Dialog{
+
+        public TuxRemoteDialog(Context context, int ressource, String title) {
+            super(context);
+            setContentView(ressource);
+            setTitle(title);
+            Button ok = (Button) findViewById(R.id.ok_button);
+            if(ok != null){
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        customOk();
+                        dismiss();
+                    }
+                });
+            }
+        }
+
+        public abstract void customOk();
+    }
 
 }

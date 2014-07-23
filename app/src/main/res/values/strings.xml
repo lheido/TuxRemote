@@ -16,5 +16,10 @@
     <string name="action_kill_all">Fermer toutes les app</string>
     <string name="action_add_server">Ajouter un server</string>
     <string name="cmd_icon">cmd icon</string>
+    <string name="app_header_description">app header image</string>
+    <string name="label_name">Nom</string>
+    <string name="label_ip">ip</string>
+    <string name="label_password">mot de passe</string>
+    <string name="add_server_button">Ajouter</string>
 
 </resources>

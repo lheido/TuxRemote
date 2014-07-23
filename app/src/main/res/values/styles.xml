@@ -1,8 +1,29 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+    <!--</style>-->
+    <style name="AppTheme" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/MyAB</item>
+        <item name="actionBarStyle">@style/MyAB</item>
+        <item name="android:windowActionBarOverlay" tools:ignore="NewApi">false</item>
+        <item name="windowActionBarOverlay">false</item>
     </style>
+
+    <style name="MyAB" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background" tools:ignore="NewApi">@drawable/ab_background</item>
+        <item name="background">@drawable/ab_background</item>
+        <item name="android:titleTextStyle" tools:ignore="NewApi">@style/ab_titleText</item>
+        <item name="titleTextStyle">@style/ab_titleText</item>
+    </style>
+
+    <style name="ab_titleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <color name="black">#FF000000</color>
+    <color name="grey_low">#FF242424</color>
 
 </resources>

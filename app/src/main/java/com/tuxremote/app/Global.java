@@ -1,7 +1,7 @@
 package com.tuxremote.app;
 
 public class Global {
-    private static boolean connexion = true;
+    private static boolean connexion = false;
 
     /**
      * userIsConnected : true or false if user is connected/disconneted to a server.

@@ -1,5 +1,6 @@
 package com.tuxremote.app;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -24,6 +25,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import de.timroes.android.listview.EnhancedListView;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -54,7 +57,7 @@ public class NavigationDrawerFragment extends Fragment {
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
+    private EnhancedListView mDrawerListView;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
@@ -62,6 +65,7 @@ public class NavigationDrawerFragment extends Fragment {
     private ArrayList<App> listApp = null;
     private AppListViewAdapter adapter;
     private App.ListAppTask task;
+    private Context context;
 
     public NavigationDrawerFragment() {
     }
@@ -86,17 +90,48 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
             Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
+        mDrawerListView = (EnhancedListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
+        mDrawerListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
+            @Override
+            public EnhancedListView.Undoable onDismiss(EnhancedListView enhancedListView, final int position) {
+                final App item = listApp.remove(position);
+                adapter.notifyDataSetChanged();
+                return new EnhancedListView.Undoable() {
+                    @Override
+                    public void undo() {
+                        listApp.add(position, item);
+                        adapter.notifyDataSetChanged();
+                    }
+                    @Override
+                    public void discard() {
+                        Command cmd = Command.cmdClose(item.getHexaId());
+                        //exec close command
+                    }
+                };
+            }
+        });
+        mDrawerListView.enableSwipeToDismiss();
+        mDrawerListView.setSwipeDirection(EnhancedListView.SwipeDirection.END);
+        mDrawerListView.setUndoHideDelay(5000);
+        mDrawerListView.setRequireTouchBeforeDismiss(false);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
             }
         });
+        mDrawerListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(context, "long press", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
         listApp = new ArrayList<App>();
+        listApp.add(new App("hexaId", "pid", "name", "title", null));
         //create list
         task = new App.ListAppTask(){
             @Override
@@ -108,7 +143,7 @@ public class NavigationDrawerFragment extends Fragment {
         };
         adapter = new AppListViewAdapter(getActivity().getApplicationContext(), listApp);
         mDrawerListView.setAdapter(adapter);
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+//        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
 
@@ -187,24 +222,26 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
+        mDrawerListView.discardUndo();
     }
 
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
+//        if (mDrawerListView != null) {
+//            mDrawerListView.setItemChecked(position, true);
+//        }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position, listApp.get(position).getTitle());
+            mCallbacks.onNavigationDrawerItemSelected(position, listApp.get(position));
         }
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        context = activity.getApplicationContext();
         try {
             mCallbacks = (NavigationDrawerCallbacks) activity;
         } catch (ClassCastException e) {
@@ -282,6 +319,6 @@ public class NavigationDrawerFragment extends Fragment {
         /**
          * Called when an item in the navigation drawer is selected.
          */
-        void onNavigationDrawerItemSelected(int position, String title);
+        void onNavigationDrawerItemSelected(int position, App app);
     }
 }

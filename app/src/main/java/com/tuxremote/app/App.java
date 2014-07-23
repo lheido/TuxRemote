@@ -36,9 +36,9 @@ public class App {
     public void setIconToView(Context context, ImageView view){
         if(this.icon != null){
             File filePath = context.getFileStreamPath(this.icon);
-            Picasso.with(context).load(filePath).resize(view.getWidth(), view.getHeight()).into(view);
+            Picasso.with(context).load(filePath).fit().centerCrop().into(view);
         }else{
-            Picasso.with(context).load(TuxRemoteUtils.DEFAULT_ICON_APP).resize(view.getWidth(), view.getHeight()).into(view);
+            Picasso.with(context).load(TuxRemoteUtils.DEFAULT_ICON_APP).fit().centerCrop().into(view);
         }
     }
 

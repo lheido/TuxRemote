@@ -29,6 +29,7 @@ public class ConnectFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.connect_fragment, container, false);
         if(rootView != null) {
             listView = (ListView) rootView.findViewById(R.id.list);
+            servers = new ArrayList<Server>();
             adapter = new ConnectAdapter(getActivity().getApplicationContext(), servers);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

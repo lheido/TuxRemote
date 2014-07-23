@@ -1,6 +1,5 @@
 package com.tuxremote.app;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,8 +47,8 @@ public class CmdListViewAdapter extends BaseAdapter {
         ViewHolder holder;
         if(convertView == null){
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.rowlayout, parent, false);
-            holder.text = (TextView) convertView.findViewById(R.id.label);
+            convertView = LayoutInflater.from(context).inflate(R.layout.row_cmd, parent, false);
+            holder.text = (TextView) convertView.findViewById(R.id.cmd_name);
             holder.image = (ImageView) convertView.findViewById(R.id.icon);
             convertView.setTag(holder);
         } else
