@@ -1,5 +1,7 @@
 package com.tuxremote.app;
 
+import android.content.Context;
+
 public class Global {
     private static boolean connexion = false;
 
@@ -14,4 +16,15 @@ public class Global {
     public static void setUserIsConnected(boolean c){
         connexion = c;
     }
+
+    private static Context context;
+
+    public static void setContext(Context c){
+        context = c;
+    }
+
+    public static Context getStaticContext(){
+        return context;
+    }
+
 }

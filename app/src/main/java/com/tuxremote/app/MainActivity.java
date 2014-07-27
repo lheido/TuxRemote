@@ -49,6 +49,7 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
+        Global.setContext(context);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -150,34 +151,32 @@ public class MainActivity extends ActionBarActivity
             return true;
         }
         else if(id == R.id.action_add_server){
-//            TuxRemoteUtils.TuxRemoteDialog newServerDialog = new TuxRemoteUtils.TuxRemoteDialog(
-//                    context, R.layout.new_server, "Nouveau serveur") {
-//                @Override
-//                public void customOk() {
-//                    EditText entryName = (EditText)this.findViewById(R.id.entry_name);
-//                    EditText entryIp = (EditText)this.findViewById(R.id.entry_ip);
-//                    EditText entryPassword = (EditText)this.findViewById(R.id.entry_password);
-//                    Log.v("CustomDialog", entryName.getText().toString()+", "+
-//                                          entryIp.getText().toString()+", "+
-//                                          entryPassword.getText().toString());
-//                }
-//            };
-//            newServerDialog.show();
-            Intent intent = new Intent(this, TuxRemoteUtils.PasswordDialog.class);
-            startActivityForResult(intent, 1);
+            TuxRemoteUtils.TuxRemoteDialog newServerDialog = new TuxRemoteUtils.TuxRemoteDialog(
+                    context, R.layout.new_server, "Nouveau serveur") {
+                @Override
+                public void customOk() {
+                    EditText entryName = (EditText)this.findViewById(R.id.entry_name);
+                    EditText entryIp = (EditText)this.findViewById(R.id.entry_ip);
+                    EditText entryPassword = (EditText)this.findViewById(R.id.entry_password);
+                    Log.v("CustomDialog", entryName.getText().toString()+", "+
+                                          entryIp.getText().toString()+", "+
+                                          entryPassword.getText().toString());
+                }
+            };
+            newServerDialog.show();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if(resultCode == RESULT_OK && data.getExtras().containsKey("pass")) {
-            String pass = data.getExtras().getString("pass");
-            Log.v("onActivityResult", "pass = "+pass);
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        if(resultCode == RESULT_OK && data.getExtras().containsKey("pass")) {
+//            String pass = data.getExtras().getString("pass");
+//            Log.v("onActivityResult", "pass = "+pass);
+//        }
+//    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {

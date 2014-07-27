@@ -1,4 +1,4 @@
-package TuxeRemoteSsh;
+package com.tuxremote.app.TuxeRemoteSsh;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -149,8 +149,10 @@ public class SshSession {
 			}
 			channel.disconnect();
 
-		} catch (JSchException | IOException e) {
-			// TODO Auto-generated catch block
+		} catch (JSchException e){
+            e.printStackTrace();
+        }
+        catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -195,9 +197,12 @@ public class SshSession {
 			}
 			channel.disconnect();
 
-		} catch (JSchException | IOException e) {
-			e.printStackTrace();
-		}
+		} catch (JSchException e){
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
 		return new BashReturn(result, erreur);
 	}

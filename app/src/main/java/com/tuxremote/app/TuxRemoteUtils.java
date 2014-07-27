@@ -78,37 +78,37 @@ public class TuxRemoteUtils {
         public abstract void customOk();
     }
 
-    public static class PasswordDialog extends Activity implements View.OnClickListener {
-
-        private EditText password;
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState){
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.password_dialog);
-            password = (EditText) findViewById(R.id.entry_password);
-            Button ok = (Button) findViewById(R.id.ok_button);
-            ok.setOnClickListener(this);
-            Button cancel = (Button) findViewById(R.id.cancel_button);
-            cancel.setOnClickListener(this);
-            setTitle("Password");
-        }
-
-        @Override
-        public void onClick(View view) {
-            Intent intent = getIntent();
-            int id = view.getId();
-            switch (id){
-                case R.id.ok_button:
-                    String result = password.getText().toString();
-                    intent.putExtra("pass", result);
-                    setResult(RESULT_OK, intent);
-                    break;
-                case R.id.cancel_button:
-                    setResult(RESULT_CANCELED, intent);
-                    break;
-            }
-            finish();
-        }
-    }
+//    public static class PasswordDialog extends Activity implements View.OnClickListener {
+//
+//        private EditText password;
+//
+//        @Override
+//        protected void onCreate(Bundle savedInstanceState){
+//            super.onCreate(savedInstanceState);
+//            setContentView(R.layout.password_dialog);
+//            password = (EditText) findViewById(R.id.entry_password);
+//            Button ok = (Button) findViewById(R.id.ok_button);
+//            ok.setOnClickListener(this);
+//            Button cancel = (Button) findViewById(R.id.cancel_button);
+//            cancel.setOnClickListener(this);
+//            setTitle("Password");
+//        }
+//
+//        @Override
+//        public void onClick(View view) {
+//            Intent intent = getIntent();
+//            int id = view.getId();
+//            switch (id){
+//                case R.id.ok_button:
+//                    String result = password.getText().toString();
+//                    intent.putExtra("pass", result);
+//                    setResult(RESULT_OK, intent);
+//                    break;
+//                case R.id.cancel_button:
+//                    setResult(RESULT_CANCELED, intent);
+//                    break;
+//            }
+//            finish();
+//        }
+//    }
 }

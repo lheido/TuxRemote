@@ -1,4 +1,4 @@
-package TuxeRemoteSsh;
+package com.tuxremote.app.TuxeRemoteSsh;
 import java.util.ArrayList;
 
 
