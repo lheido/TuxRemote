@@ -2,6 +2,8 @@ package com.tuxremote.app;
 
 import android.content.Context;
 
+import com.tuxremote.app.TuxeRemoteSsh.SshSession;
+
 public class Global {
     private static boolean connexion = false;
 
@@ -17,6 +19,9 @@ public class Global {
         connexion = c;
     }
 
+    /**
+     *
+     */
     private static Context context;
 
     public static void setContext(Context c){
@@ -26,5 +31,7 @@ public class Global {
     public static Context getStaticContext(){
         return context;
     }
+
+    public static SshSession session;
 
 }

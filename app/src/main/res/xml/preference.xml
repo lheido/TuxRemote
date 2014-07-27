@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:key="save_password"
+        android:summary="@string/save_password"
+        android:switchTextOff="@string/save_password_off"
+        android:switchTextOn="@string/save_password_off"
+        android:title="@string/save_password_title" />
+</PreferenceScreen>

@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.tuxremote.app.TuxeRemoteSsh.SshSession;
+
 //Jsch for SSH2
 //import com.jcraft.jsch.Channel;
 
@@ -133,6 +135,20 @@ public class MainActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            TuxRemoteUtils.TuxRemoteDialog newServerDialog = new TuxRemoteUtils.TuxRemoteDialog(
+                    context, R.layout.password_dialog, "Test") {
+                @Override
+                public void customCancel() {
+                    Log.v("CustomDialog", "annuler");
+                }
+
+                @Override
+                public void customOk() {
+                    EditText entryPassword = (EditText)this.findViewById(R.id.entry_password);
+                    Log.v("CustomDialog", entryPassword.getText().toString());
+                }
+            };
+            newServerDialog.show();
             return true;
         }
         else if(id == R.id.action_global_volume){
@@ -154,6 +170,9 @@ public class MainActivity extends ActionBarActivity
             TuxRemoteUtils.TuxRemoteDialog newServerDialog = new TuxRemoteUtils.TuxRemoteDialog(
                     context, R.layout.new_server, "Nouveau serveur") {
                 @Override
+                public void customCancel() {}
+
+                @Override
                 public void customOk() {
                     EditText entryName = (EditText)this.findViewById(R.id.entry_name);
                     EditText entryIp = (EditText)this.findViewById(R.id.entry_ip);
@@ -161,6 +180,10 @@ public class MainActivity extends ActionBarActivity
                     Log.v("CustomDialog", entryName.getText().toString()+", "+
                                           entryIp.getText().toString()+", "+
                                           entryPassword.getText().toString());
+                    Global.session = new SshSession(entryName.getText().toString(), "192.168.0.13", null);
+                    Global.session.setPassword(entryPassword.getText().toString());
+                    Log.v("Test Connect", "isConnected = "+Global.session.connect());
+                    Global.session.disconnect();
                 }
             };
             newServerDialog.show();

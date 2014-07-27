@@ -25,5 +25,8 @@
     <string name="cancel">Annuler</string>
     <string name="ok_button">Ok</string>
     <string name="cancel_button">Annuler</string>
+    <string name="save_password">Sauvegarder les mots de passe</string>
+    <string name="save_password_off">no save</string>
+    <string name="save_password_title">Plop</string>
 
 </resources>

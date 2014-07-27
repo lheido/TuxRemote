@@ -1,4 +1,6 @@
 package com.tuxremote.app.TuxeRemoteSsh;
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,7 +51,8 @@ public class SshSession {
 		try {
 			session.connect();
 		} catch (JSchException e) {
-			return false;
+            e.printStackTrace();
+            return false;
 		}
 		return true;
 	}
@@ -233,4 +236,9 @@ public class SshSession {
 		}
 		return b;
 	}
+
+    public void setPassword(String pass){
+        session.setPassword(pass);
+    }
+
 }

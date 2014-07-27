@@ -73,7 +73,19 @@ public class TuxRemoteUtils {
                     }
                 });
             }
+            Button cancel = (Button) findViewById(R.id.cancel_button);
+            if(cancel != null){
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        customCancel();
+                        dismiss();
+                    }
+                });
+            }
         }
+
+        public abstract void customCancel();
 
         public abstract void customOk();
     }
