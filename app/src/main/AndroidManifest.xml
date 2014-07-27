@@ -16,6 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".TuxRemoteUtils$PasswordDialog"
+            android:theme="@android:style/Theme.Holo.Dialog" />
     </application>
 
 </manifest>

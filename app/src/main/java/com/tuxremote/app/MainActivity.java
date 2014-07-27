@@ -2,6 +2,7 @@ package com.tuxremote.app;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.FragmentManager;
@@ -149,24 +150,34 @@ public class MainActivity extends ActionBarActivity
             return true;
         }
         else if(id == R.id.action_add_server){
-            TuxRemoteUtils.TuxRemoteDialog newServerDialog = new TuxRemoteUtils.TuxRemoteDialog(
-                    context, R.layout.new_server, "Nouveau serveur") {
-                @Override
-                public void customOk() {
-                    EditText entryName = (EditText)this.findViewById(R.id.entry_name);
-                    EditText entryIp = (EditText)this.findViewById(R.id.entry_ip);
-                    EditText entryPassword = (EditText)this.findViewById(R.id.entry_password);
-                    Log.v("CustomDialog", entryName.getText().toString()+", "+
-                                          entryIp.getText().toString()+", "+
-                                          entryPassword.getText().toString());
-                }
-            };
-            newServerDialog.show();
+//            TuxRemoteUtils.TuxRemoteDialog newServerDialog = new TuxRemoteUtils.TuxRemoteDialog(
+//                    context, R.layout.new_server, "Nouveau serveur") {
+//                @Override
+//                public void customOk() {
+//                    EditText entryName = (EditText)this.findViewById(R.id.entry_name);
+//                    EditText entryIp = (EditText)this.findViewById(R.id.entry_ip);
+//                    EditText entryPassword = (EditText)this.findViewById(R.id.entry_password);
+//                    Log.v("CustomDialog", entryName.getText().toString()+", "+
+//                                          entryIp.getText().toString()+", "+
+//                                          entryPassword.getText().toString());
+//                }
+//            };
+//            newServerDialog.show();
+            Intent intent = new Intent(this, TuxRemoteUtils.PasswordDialog.class);
+            startActivityForResult(intent, 1);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode == RESULT_OK && data.getExtras().containsKey("pass")) {
+            String pass = data.getExtras().getString("pass");
+            Log.v("onActivityResult", "pass = "+pass);
+        }
+    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {

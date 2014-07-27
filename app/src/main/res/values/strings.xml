@@ -21,5 +21,9 @@
     <string name="label_ip">ip</string>
     <string name="label_password">mot de passe</string>
     <string name="add_server_button">Ajouter</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="ok_button">Ok</string>
+    <string name="cancel_button">Annuler</string>
 
 </resources>
