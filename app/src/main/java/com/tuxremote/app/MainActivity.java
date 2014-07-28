@@ -1,11 +1,9 @@
 package com.tuxremote.app;
 
-import android.app.Dialog;
+import android.app.FragmentManager;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,15 +11,10 @@ import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
-
-import com.tuxremote.app.TuxeRemoteSsh.SshSession;
-
-//Jsch for SSH2
-//import com.jcraft.jsch.Channel;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, SeekBar.OnSeekBarChangeListener {
@@ -49,6 +42,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
         context = this;
         Global.setContext(context);
@@ -83,7 +77,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position, App app) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, AppFragment.newInstance(app))
                 .commit();
@@ -92,10 +86,18 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void disconnectFragment(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, ConnectFragment.newInstance())
                 .commit();
+    }
+
+    public void onConnect(Server server){
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, EmptyFragment.newInstance())
+                .commit();
+        Global.setUserIsConnected(true);
     }
 
     public void onSectionAttached(String name) {
@@ -135,20 +137,10 @@ public class MainActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            TuxRemoteUtils.TuxRemoteDialog newServerDialog = new TuxRemoteUtils.TuxRemoteDialog(
-                    context, R.layout.password_dialog, "Test") {
-                @Override
-                public void customCancel() {
-                    Log.v("CustomDialog", "annuler");
-                }
-
-                @Override
-                public void customOk() {
-                    EditText entryPassword = (EditText)this.findViewById(R.id.entry_password);
-                    Log.v("CustomDialog", entryPassword.getText().toString());
-                }
-            };
-            newServerDialog.show();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, Preference.newInstance())
+                    .commit();
             return true;
         }
         else if(id == R.id.action_global_volume){
@@ -166,9 +158,18 @@ public class MainActivity extends ActionBarActivity
 //            TuxRemoteUtils.CMD_SHUTDOWN
             return true;
         }
+        else if(id == R.id.action_remove_all_server){
+            FragmentManager fragmentManager = getFragmentManager();
+            ConnectFragment frag = (ConnectFragment)fragmentManager.findFragmentById(R.id.container);
+            frag.removeAllServers();
+            return true;
+        }
         else if(id == R.id.action_add_server){
             TuxRemoteUtils.TuxRemoteDialog newServerDialog = new TuxRemoteUtils.TuxRemoteDialog(
                     context, R.layout.new_server, "Nouveau serveur") {
+                @Override
+                public void customInit() {}
+
                 @Override
                 public void customCancel() {}
 
@@ -176,14 +177,17 @@ public class MainActivity extends ActionBarActivity
                 public void customOk() {
                     EditText entryName = (EditText)this.findViewById(R.id.entry_name);
                     EditText entryIp = (EditText)this.findViewById(R.id.entry_ip);
+                    EditText entryUserId = (EditText)this.findViewById(R.id.entry_user_id);
                     EditText entryPassword = (EditText)this.findViewById(R.id.entry_password);
-                    Log.v("CustomDialog", entryName.getText().toString()+", "+
-                                          entryIp.getText().toString()+", "+
-                                          entryPassword.getText().toString());
-                    Global.session = new SshSession(entryName.getText().toString(), "192.168.0.13", null);
-                    Global.session.setPassword(entryPassword.getText().toString());
-                    Log.v("Test Connect", "isConnected = "+Global.session.connect());
-                    Global.session.disconnect();
+                    Server server = new Server(entryName.getText().toString(),
+                            entryIp.getText().toString(),
+                            entryUserId.getText().toString(),
+                            entryPassword.getText().toString().isEmpty()?null:entryPassword.getText().toString());
+                    FragmentManager fragmentManager = getFragmentManager();
+                    ConnectFragment frag = (ConnectFragment)fragmentManager.findFragmentById(R.id.container);
+                    frag.save_server(server);
+                    frag.add(server);
+                    frag.prefUpdateServersList();
                 }
             };
             newServerDialog.show();
@@ -191,15 +195,6 @@ public class MainActivity extends ActionBarActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        if(resultCode == RESULT_OK && data.getExtras().containsKey("pass")) {
-//            String pass = data.getExtras().getString("pass");
-//            Log.v("onActivityResult", "pass = "+pass);
-//        }
-//    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -221,5 +216,12 @@ public class MainActivity extends ActionBarActivity
     public void setActionBarTitle(String actionBarTitle) {
         mTitle = actionBarTitle;
         restoreActionBar();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+//        if(Global.userIsConnected())
+//            Global.session.disconnect();
     }
 }

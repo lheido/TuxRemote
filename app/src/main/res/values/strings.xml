@@ -26,7 +26,12 @@
     <string name="ok_button">Ok</string>
     <string name="cancel_button">Annuler</string>
     <string name="save_password">Sauvegarder les mots de passe</string>
-    <string name="save_password_off">no save</string>
-    <string name="save_password_title">Plop</string>
+    <string name="save_password_off">Non sauvegardés</string>
+    <string name="save_password_title">Mots de passe</string>
+    <string name="save_password_on">Sauvegardés</string>
+    <string name="label_user_id">identifiant</string>
+    <string name="manage_server_valid">Modifier</string>
+    <string name="action_remove_all_server">Remove all server</string>
+    <string name="empty_fragment">Glisser du bord gauche vers la droite pour voir les applications lancées.</string>
 
 </resources>

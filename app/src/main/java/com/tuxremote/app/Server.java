@@ -1,18 +1,20 @@
 package com.tuxremote.app;
 
 public class Server {
-    private String name;
-    private String ip;
-    private String userId;
+    private String name = null;
+    private String ip = null;
+    private String userId = null;
+    private String password = null;
 
     /**
      * Constructor
      * @param n   : server name for friendly usage.
      * @param ad  : ip address.
      * @param uid : user id.
+     * @param pw  : user password.
      */
-    public Server(String n, String ad, String uid){
-        name = n; ip = ad; userId = uid;
+    public Server(String n, String ad, String uid, String pw){
+        name = n; ip = ad; userId = uid; password = pw;
     }
 
     public void setName(String n){
@@ -37,5 +39,13 @@ public class Server {
 
     public String getUserId(){
         return userId;
+    }
+
+    public void setPassword(String pw){
+        password = pw;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

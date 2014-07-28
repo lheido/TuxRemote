@@ -1,19 +1,12 @@
 package com.tuxremote.app;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 
 import java.io.ByteArrayOutputStream;
@@ -26,6 +19,9 @@ public class TuxRemoteUtils {
     public final static String SPLIT_CHAR = ":";
     public final static int DEFAULT_CLOSE_RES = R.drawable.ic_action_content_remove;
     public final static int DEFAULT_ICON_APP = R.drawable.ic_launcher;
+    public static final String SERVERS_LIST = "servers_list";
+    public static final String PREF_SPLIT = "°SPLIT°°";
+
     /**
      * Write image to internal storage
      * @param context  : Context android.
@@ -63,6 +59,7 @@ public class TuxRemoteUtils {
             super(context);
             setContentView(ressource);
             setTitle(title);
+            customInit();
             Button ok = (Button) findViewById(R.id.ok_button);
             if(ok != null){
                 ok.setOnClickListener(new View.OnClickListener() {
@@ -79,11 +76,13 @@ public class TuxRemoteUtils {
                     @Override
                     public void onClick(View view) {
                         customCancel();
-                        dismiss();
+                        cancel();
                     }
                 });
             }
         }
+
+        public abstract void customInit();
 
         public abstract void customCancel();
 
@@ -123,4 +122,8 @@ public class TuxRemoteUtils {
 //            finish();
 //        }
 //    }
+
+    public static SharedPreferences getPref(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
 }
