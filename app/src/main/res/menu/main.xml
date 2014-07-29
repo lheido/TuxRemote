@@ -23,6 +23,10 @@
                 android:title="@string/action_shutdown"
                 app:showAsAction="never"
                 />
+            <item android:id="@+id/action_deconnexion"
+                android:title="@string/action_deconnexion"
+                app:showAsAction="never"
+                />
             <item android:id="@+id/action_settings"
                 android:title="@string/action_settings"
                 android:orderInCategory="100"

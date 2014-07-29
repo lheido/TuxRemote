@@ -309,6 +309,10 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.openDrawer(mFragmentContainerView);
     }
 
+    public void closeDrawer() {
+        mDrawerLayout.closeDrawer(mFragmentContainerView);
+    }
+
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */

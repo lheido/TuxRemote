@@ -53,8 +53,14 @@ public class TuxRemoteUtils {
     public final static String CMD_RESTART  = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart";
     public final static String CMD_SHUTDOWN = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager  org.freedesktop.ConsoleKit.Manager.Stop";
 
-    public static abstract class TuxRemoteDialog extends Dialog{
 
+    public static abstract class TuxRemoteDialog extends Dialog{
+        /**
+         *
+         * @param context   : Context android.
+         * @param ressource : layout.
+         * @param title     : dialog title.
+         */
         public TuxRemoteDialog(Context context, int ressource, String title) {
             super(context);
             setContentView(ressource);

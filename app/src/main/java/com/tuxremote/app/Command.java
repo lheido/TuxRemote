@@ -73,6 +73,10 @@ public class Command {
         return new Command(name, cmd, icon);
     }
 
+    public String getCmd() {
+        return cmd;
+    }
+
     public static abstract class ListCmdTask extends AsyncTask<Void, Void, Boolean> {
 
         private ArrayList<App> listCmd = null;

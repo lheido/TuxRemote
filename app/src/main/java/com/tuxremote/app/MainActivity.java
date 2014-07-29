@@ -16,7 +16,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
@@ -158,10 +161,56 @@ public class MainActivity extends ActionBarActivity
         }
         else if(id == R.id.action_restart){
 //            TuxRemoteUtils.CMD_RESTART
+            final MainActivity act = this;
+            TuxRemoteUtils.TuxRemoteDialog alert = new TuxRemoteUtils.TuxRemoteDialog(this, R.layout.alert_dialog, "Redémarrer"){
+                @Override
+                public void customInit() {
+                    TextView label = (TextView)findViewById(R.id.alert_label);
+                    label.setText("Voulez vous vraiment, vraiment, mais alors vraiment redémarrer le serveur?");
+                }
+
+                @Override
+                public void customCancel() {}
+
+                @Override
+                public void customOk() {
+                    Log.v("RESTART", "Test Command");
+                    SSHAsyncTask task = new SSHAsyncTask(act, new Command("restart", TuxRemoteUtils.CMD_RESTART, null));
+                    task.execute();
+                }
+            };
+            alert.show();
             return true;
         }
         else if(id == R.id.action_shutdown){
 //            TuxRemoteUtils.CMD_SHUTDOWN
+            final MainActivity act = this;
+            TuxRemoteUtils.TuxRemoteDialog alert = new TuxRemoteUtils.TuxRemoteDialog(this, R.layout.alert_dialog, "Eteindre"){
+                @Override
+                public void customInit() {
+                    TextView label = (TextView)findViewById(R.id.alert_label);
+                    label.setText("Voulez vous vraiment, vraiment, mais alors vraiment éteindre le serveur? après faut le rallumer à la main t'es conscient de ça au moins??");
+                }
+
+                @Override
+                public void customCancel() {}
+
+                @Override
+                public void customOk() {
+                    SSHAsyncTask task = new SSHAsyncTask(act, new Command("shutDown", TuxRemoteUtils.CMD_SHUTDOWN, null));
+                    task.execute();
+                }
+            };
+            alert.show();
+            return true;
+        }
+        else if(id == R.id.action_deconnexion){
+            //deconnexion
+            Global.session.disconnect();
+            Global.setUserIsConnected(false);
+            disconnectFragment();
+            invalidateOptionsMenu();
+            Toast.makeText(this, "Déconnexion", Toast.LENGTH_SHORT).show();
             return true;
         }
         else if(id == R.id.action_remove_all_server){

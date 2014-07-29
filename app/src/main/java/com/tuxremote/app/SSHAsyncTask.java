@@ -2,6 +2,9 @@ package com.tuxremote.app;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
 
 import java.lang.ref.WeakReference;
 
@@ -29,9 +32,13 @@ public class SSHAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        // isCancelled() //doc : the value returned by this method should be checked periodically here
-        // call onProgressUpdate to publish updates on the UI thread.
-        //publishProgress();
+        try {
+            BashReturn retour = Global.session.SetCommand(cmd.getCmd());
+            if(retour != null)
+                Log.v("DoInBackground", ""+retour.getBashReturn().toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -44,10 +51,6 @@ public class SSHAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPostExecute (Boolean result) {
-        if (act.get() != null) {
-            if(!result){
-                // échec :(
-            }
-        }
+
     }
 }

@@ -18,7 +18,7 @@ import com.jcraft.jsch.UserInfo;
 public class SshSession {
 	private JSch jsch;
 	private Session session;
-	private UserInfo ui; 
+	private UserInfo ui;
 
 
 	//Constructeur
@@ -161,13 +161,13 @@ public class SshSession {
 
 	}
 
-	public BashReturn SetCommand(String commandeName, String commande){
+	public BashReturn SetCommand(String commande){
 		Channel channel;
 		String result=new String("");
 		String erreur=new String("");
 		try {
-			channel= openChannel(commandeName);
 			channel = session.openChannel("exec");
+            if(channel == null) return null;
 			((ChannelExec)channel).setCommand(commande);
 			channel.setInputStream(null);
 

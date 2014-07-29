@@ -1,6 +1,7 @@
 package com.tuxremote.app;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -41,6 +42,13 @@ public class ConnectFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.connect_fragment, container, false);
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager != null) {
+            NavigationDrawerFragment frag = (NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+            if (frag != null && frag.isDrawerOpen()) {
+                frag.closeDrawer();
+            }
+        }
         if(rootView != null) {
             listView = (ListView) rootView.findViewById(R.id.list);
 //            servers = new ArrayList<Server>();
