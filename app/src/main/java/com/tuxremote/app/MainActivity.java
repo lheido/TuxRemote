@@ -2,6 +2,8 @@ package com.tuxremote.app;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.app.Fragment;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -17,7 +19,8 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SeekBar.OnSeekBarChangeListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        SeekBar.OnSeekBarChangeListener, ConnectFragment.OnConnectCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -47,7 +50,7 @@ public class MainActivity extends ActionBarActivity
         context = this;
         Global.setContext(context);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+                getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
         // Set up the drawer.
@@ -70,7 +73,8 @@ public class MainActivity extends ActionBarActivity
                 Toast.makeText(this, "Error findViewById for volume action view", Toast.LENGTH_SHORT).show();
             }
             // Apply the custom View to the ActionBar
-            getSupportActionBar().setCustomView(view, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            getSupportActionBar().setCustomView(view, new ActionBar.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
     }
 
@@ -92,6 +96,7 @@ public class MainActivity extends ActionBarActivity
                 .commit();
     }
 
+    @Override
     public void onConnect(Server server){
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
@@ -137,10 +142,11 @@ public class MainActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, Preference.newInstance())
-                    .commit();
+            Intent intent;
+            intent = new Intent(this, Preference.class);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
             return true;
         }
         else if(id == R.id.action_global_volume){
@@ -160,8 +166,10 @@ public class MainActivity extends ActionBarActivity
         }
         else if(id == R.id.action_remove_all_server){
             FragmentManager fragmentManager = getFragmentManager();
-            ConnectFragment frag = (ConnectFragment)fragmentManager.findFragmentById(R.id.container);
-            frag.removeAllServers();
+            Fragment frag = fragmentManager.findFragmentById(R.id.container);
+            if(frag != null && frag.getClass() == ConnectFragment.class) {
+                ((ConnectFragment)frag).removeAllServers();
+            }
             return true;
         }
         else if(id == R.id.action_add_server){
@@ -179,15 +187,19 @@ public class MainActivity extends ActionBarActivity
                     EditText entryIp = (EditText)this.findViewById(R.id.entry_ip);
                     EditText entryUserId = (EditText)this.findViewById(R.id.entry_user_id);
                     EditText entryPassword = (EditText)this.findViewById(R.id.entry_password);
+
                     Server server = new Server(entryName.getText().toString(),
                             entryIp.getText().toString(),
                             entryUserId.getText().toString(),
                             entryPassword.getText().toString().isEmpty()?null:entryPassword.getText().toString());
+
                     FragmentManager fragmentManager = getFragmentManager();
-                    ConnectFragment frag = (ConnectFragment)fragmentManager.findFragmentById(R.id.container);
-                    frag.save_server(server);
-                    frag.add(server);
-                    frag.prefUpdateServersList();
+                    Fragment frag = fragmentManager.findFragmentById(R.id.container);
+                    if(frag != null && frag.getClass() == ConnectFragment.class) {
+                        ((ConnectFragment)frag).save_server(server);
+                        ((ConnectFragment)frag).add(server);
+                        ((ConnectFragment)frag).prefUpdateServersList();
+                    }
                 }
             };
             newServerDialog.show();
@@ -221,7 +233,10 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onDestroy(){
         super.onDestroy();
-//        if(Global.userIsConnected())
-//            Global.session.disconnect();
+        if(Global.userIsConnected()) {
+            Global.session.disconnect();
+            Global.setUserIsConnected(false);
+            Toast.makeText(this, "Déconnexion", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -25,6 +25,7 @@ public class AppFragment extends Fragment {
     private static final String ARG_HEXAID = "hexaId";
     private static final String ARG_TITLE = "window_title";
     private static final String ARG_PID = "app_pid";
+    public static final String TAG="AppFragment";
     private AppAdapter adapter;
     private ListView listView;
     private ArrayList<Command> cmds;

@@ -5,9 +5,6 @@ import android.os.AsyncTask;
 
 import java.lang.ref.WeakReference;
 
-/**
- * Created by lheido on 04/06/14.
- */
 public class SSHAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private final Command cmd;

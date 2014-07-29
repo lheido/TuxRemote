@@ -25,10 +25,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ConnectFragment extends Fragment {
+    public static final String TAG="ConnectFragment";
     private ArrayList<Server> servers;
     private ListView listView;
     private ConnectAdapter adapter;
     private MainActivity act;
+    private OnConnectCallbacks mCallbacks;
 
     public static ConnectFragment newInstance() {
         return new ConnectFragment();
@@ -43,7 +45,7 @@ public class ConnectFragment extends Fragment {
             listView = (ListView) rootView.findViewById(R.id.list);
 //            servers = new ArrayList<Server>();
             servers = retrieveServersList();
-            adapter = new ConnectAdapter(getActivity().getApplicationContext(), servers);
+            adapter = new ConnectAdapter(Global.getStaticContext(), servers);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -71,10 +73,22 @@ public class ConnectFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         act = (MainActivity) activity;
+        try {
+            mCallbacks = (OnConnectCallbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement OnConnectCallbacks.");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+        act = null;
     }
 
     public void save_server(Server server){
-        SharedPreferences pref = TuxRemoteUtils.getPref(getActivity().getApplicationContext());
+        SharedPreferences pref = TuxRemoteUtils.getPref(Global.getStaticContext());
         String str = server.getIp()+
                 TuxRemoteUtils.PREF_SPLIT+
                 server.getUserId()+
@@ -86,7 +100,7 @@ public class ConnectFragment extends Fragment {
 
     private ArrayList<Server> retrieveServersList(){
         ArrayList<Server> serversList = new ArrayList<Server>();
-        SharedPreferences pref = TuxRemoteUtils.getPref(getActivity().getApplicationContext());
+        SharedPreferences pref = TuxRemoteUtils.getPref(Global.getStaticContext());
         Set<String> list = pref.getStringSet(TuxRemoteUtils.SERVERS_LIST, new HashSet<String>());
         for(String name : list){
             String[] data = pref.getString(name, "").split(TuxRemoteUtils.PREF_SPLIT);
@@ -97,12 +111,12 @@ public class ConnectFragment extends Fragment {
     }
 
     public void prefRemoveServer(String name){
-        SharedPreferences pref = TuxRemoteUtils.getPref(getActivity().getApplicationContext());
+        SharedPreferences pref = TuxRemoteUtils.getPref(Global.getStaticContext());
         pref.edit().putStringSet(name, null).commit();
     }
 
     public void prefUpdateServersList(){
-        SharedPreferences pref = TuxRemoteUtils.getPref(getActivity().getApplicationContext());
+        SharedPreferences pref = TuxRemoteUtils.getPref(Global.getStaticContext());
         Set<String> set = new HashSet<String>();
         for (Server server : servers){
             set.add(server.getName());
@@ -111,7 +125,7 @@ public class ConnectFragment extends Fragment {
     }
 
     public void removeAllServers(){
-        SharedPreferences pref = TuxRemoteUtils.getPref(getActivity().getApplicationContext());
+        SharedPreferences pref = TuxRemoteUtils.getPref(Global.getStaticContext());
         SharedPreferences.Editor editor = pref.edit();
         for (Server server : servers){
             editor.putStringSet(server.getName(), null);
@@ -219,7 +233,7 @@ public class ConnectFragment extends Fragment {
         }
     }
 
-    public static class TestConnexion extends AsyncTask<Void, Void, Boolean> {
+    public class TestConnexion extends AsyncTask<Void, Void, Boolean> {
 
         private final Server server;
         private WeakReference<MainActivity> act;
@@ -252,7 +266,10 @@ public class ConnectFragment extends Fragment {
         protected void onPostExecute (Boolean result) {
             String message = null;
             if(result){
-                 message = "Connexion réussie";
+                message = "Connexion réussie";
+                if (mCallbacks != null) {
+                    mCallbacks.onConnect(server);
+                }
             }else{
                 message = "Echec connexion";
             }
@@ -261,5 +278,15 @@ public class ConnectFragment extends Fragment {
                 act.get().setProgressBarIndeterminateVisibility(false);
             }
         }
+    }
+
+    /**
+     * Interface onConnect implemented by MainActivity
+     */
+    public static interface OnConnectCallbacks{
+        /**
+         * Called when server item is selected and session.connect() return true.
+         */
+        void onConnect(Server server);
     }
 }

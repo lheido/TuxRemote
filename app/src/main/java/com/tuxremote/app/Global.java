@@ -19,9 +19,6 @@ public class Global {
         connexion = c;
     }
 
-    /**
-     *
-     */
     private static Context context;
 
     public static void setContext(Context c){

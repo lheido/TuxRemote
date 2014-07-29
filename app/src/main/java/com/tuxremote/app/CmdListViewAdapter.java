@@ -10,9 +10,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-/**
- * Created by lheido on 04/06/14.
- */
 public class CmdListViewAdapter extends BaseAdapter {
     private final Context context;
     private final ArrayList<Command> items;
