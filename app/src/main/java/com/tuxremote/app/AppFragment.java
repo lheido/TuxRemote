@@ -18,6 +18,11 @@ import android.widget.TextView;
 //import com.manuelpeinado.fadingactionbar.extras.actionbarcompat.FadingActionBarHelper;
 //import com.squareup.picasso.Picasso;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class AppFragment extends Fragment {
@@ -62,7 +67,7 @@ public class AppFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         cmds = new ArrayList<Command>();
-        cmds.addAll(loadFromConfigFile(appName, appHexaId));
+        cmds.addAll(loadFromConfigFile(Global.getStaticContext(), appName, appHexaId));
 //        View view = mFadingHelper.createView(inflater);
 //        ImageView img = (ImageView) view.findViewById(R.id.image_header);
 //        Picasso.with(getActivity().getApplicationContext()).load(TuxRemoteUtils.DEFAULT_ICON_APP).fit().centerInside().into(img);
@@ -82,7 +87,7 @@ public class AppFragment extends Fragment {
         return view;
     }
 
-    private static ArrayList<Command> loadFromConfigFile(String appName, String appHexaId) {
+    private static ArrayList<Command> loadFromConfigFile(Context context, String appName, String appHexaId) {
         ArrayList<Command> list = new ArrayList<Command>();
         //retrieve commands list for appName into config file
         //use static methode Command.createCmdsList(cmd_string_arrayList)

@@ -257,7 +257,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         currentVolume = i;
-//        Log.v("onProgressChanged",""+i);
     }
 
     @Override

@@ -7,10 +7,11 @@ echo "Création du fichier de config : ~/.config/TuxRemote/tuxRemote.config"
 cd ~/.config
 mkdir -p TuxRemote
 cd TuxRemote
-if [ -f tuxRemote.config ]
+config=config.xml
+if [ -f $config ]
  then
-    echo "Le fichier tuxRemote.config existe déjà!"
+    echo "Le fichier $config existe déjà!"
  else
-    echo "création du fichier tuxRemote.config"
-    echo "plop" > tuxRemote.config
+    echo "création du fichier $config"
+    echo "plop" > $config
 fi

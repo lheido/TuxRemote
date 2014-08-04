@@ -23,6 +23,7 @@ public class TuxRemoteUtils {
     public final static int DEFAULT_ICON_APP = R.drawable.ic_launcher;
     public static final String SERVERS_LIST = "servers_list";
     public static final String PREF_SPLIT = "°SPLIT°°";
+    public static final String CONFIG_FILE = "config.xml";
 
     /**
      * Write image to internal storage
