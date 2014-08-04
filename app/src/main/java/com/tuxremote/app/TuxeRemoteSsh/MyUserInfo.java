@@ -26,7 +26,7 @@ public class MyUserInfo implements UserInfo{
 //			else{
 //				return false;
 //			}
-            return true;
+            return false;
 		}
 		public void showMessage(String message){
             Toast.makeText(Global.getStaticContext(), message, Toast.LENGTH_LONG).show();

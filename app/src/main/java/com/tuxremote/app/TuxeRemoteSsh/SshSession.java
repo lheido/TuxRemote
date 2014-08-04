@@ -22,13 +22,13 @@ public class SshSession {
 
 
 	//Constructeur
-	public SshSession(String userName, String hostName, String sshKeyRoot) {
-		init(userName, hostName, sshKeyRoot);
+	public SshSession(String userName, String hostName, String sshKeyRoot, int port) {
+		init(userName, hostName, sshKeyRoot, port);
 	}
 
 	//réinit de la session
 
-	public void init(String userName, String hostName, String sshKeyRoot){
+	public void init(String userName, String hostName, String sshKeyRoot, int port){
 		jsch=new JSch();
 
 		try {
@@ -36,7 +36,7 @@ public class SshSession {
 				jsch.addIdentity(new File(sshKeyRoot).getAbsolutePath());
 			}
 
-			session = jsch.getSession(userName, hostName , 22);
+			session = jsch.getSession(userName, hostName , port);
 		} catch (JSchException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

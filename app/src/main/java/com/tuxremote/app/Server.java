@@ -5,6 +5,7 @@ public class Server {
     private String ip = null;
     private String userId = null;
     private String password = null;
+    private boolean available = false;
 
     /**
      * Constructor
@@ -47,5 +48,13 @@ public class Server {
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

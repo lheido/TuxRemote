@@ -11,10 +11,12 @@ import android.widget.Button;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.util.ArrayList;
 
 public class TuxRemoteUtils {
+
+    public final static String CMD_RESTART  = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart";
+    public final static String CMD_SHUTDOWN = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager  org.freedesktop.ConsoleKit.Manager.Stop";
+    public final static String CMD_VOLUME = "amixer -D pulse sset Master ";
 
     public final static String SPLIT_CHAR = ":";
     public final static int DEFAULT_CLOSE_RES = R.drawable.ic_action_content_remove;
@@ -46,13 +48,22 @@ public class TuxRemoteUtils {
         }
     }
 
+    /**
+     * Write content to file fileName in internal storage
+     * @param context  : context.
+     * @param fileName : file name.
+     * @param content  : content to back up.
+     */
     public static void saveFileToInternalStorage(Context context, String fileName, String content){
-
+        FileOutputStream outputStream;
+        try {
+            outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            outputStream.write(content.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
-    public final static String CMD_RESTART  = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart";
-    public final static String CMD_SHUTDOWN = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager  org.freedesktop.ConsoleKit.Manager.Stop";
-
 
     public static abstract class TuxRemoteDialog extends Dialog{
         /**
@@ -94,40 +105,6 @@ public class TuxRemoteUtils {
 
         public abstract void customOk();
     }
-
-//    public static class PasswordDialog extends Activity implements View.OnClickListener {
-//
-//        private EditText password;
-//
-//        @Override
-//        protected void onCreate(Bundle savedInstanceState){
-//            super.onCreate(savedInstanceState);
-//            setContentView(R.layout.password_dialog);
-//            password = (EditText) findViewById(R.id.entry_password);
-//            Button ok = (Button) findViewById(R.id.ok_button);
-//            ok.setOnClickListener(this);
-//            Button cancel = (Button) findViewById(R.id.cancel_button);
-//            cancel.setOnClickListener(this);
-//            setTitle("Password");
-//        }
-//
-//        @Override
-//        public void onClick(View view) {
-//            Intent intent = getIntent();
-//            int id = view.getId();
-//            switch (id){
-//                case R.id.ok_button:
-//                    String result = password.getText().toString();
-//                    intent.putExtra("pass", result);
-//                    setResult(RESULT_OK, intent);
-//                    break;
-//                case R.id.cancel_button:
-//                    setResult(RESULT_CANCELED, intent);
-//                    break;
-//            }
-//            finish();
-//        }
-//    }
 
     public static SharedPreferences getPref(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context);

@@ -68,9 +68,7 @@ public class MainActivity extends ActionBarActivity
         if(view != null) {
             mVolumeControls = (SeekBar) view.findViewById(R.id.volume_control);
             if (mVolumeControls != null) {
-                // Set the max range of the SeekBar to the max volume stream type
                 mVolumeControls.setMax(100);
-                // Bind the OnSeekBarChangeListener
                 mVolumeControls.setOnSeekBarChangeListener(this);
             } else {
                 Toast.makeText(this, "Error findViewById for volume action view", Toast.LENGTH_SHORT).show();
@@ -156,11 +154,10 @@ public class MainActivity extends ActionBarActivity
             // Toggle the custom View's visibility
             mShowingControls = !mShowingControls;
             getSupportActionBar().setDisplayShowCustomEnabled(mShowingControls);
-            // Set the progress to the current volume level of the stream
+            // Set the progress to the current volume level
             mVolumeControls.setProgress(currentVolume);
         }
         else if(id == R.id.action_restart){
-//            TuxRemoteUtils.CMD_RESTART
             final MainActivity act = this;
             TuxRemoteUtils.TuxRemoteDialog alert = new TuxRemoteUtils.TuxRemoteDialog(this, R.layout.alert_dialog, "Redémarrer"){
                 @Override
@@ -183,7 +180,6 @@ public class MainActivity extends ActionBarActivity
             return true;
         }
         else if(id == R.id.action_shutdown){
-//            TuxRemoteUtils.CMD_SHUTDOWN
             final MainActivity act = this;
             TuxRemoteUtils.TuxRemoteDialog alert = new TuxRemoteUtils.TuxRemoteDialog(this, R.layout.alert_dialog, "Eteindre"){
                 @Override
@@ -205,11 +201,12 @@ public class MainActivity extends ActionBarActivity
             return true;
         }
         else if(id == R.id.action_deconnexion){
-            //deconnexion
             Global.session.disconnect();
             Global.setUserIsConnected(false);
             disconnectFragment();
-            invalidateOptionsMenu();
+            restoreActionBar();
+            mShowingControls = false;
+            getSupportActionBar().setDisplayShowCustomEnabled(false);
             Toast.makeText(this, "Déconnexion", Toast.LENGTH_SHORT).show();
             return true;
         }
@@ -268,7 +265,12 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        Toast.makeText(this, "volume = "+currentVolume, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "volume = "+currentVolume, Toast.LENGTH_SHORT).show();
+        String cmd = TuxRemoteUtils.CMD_VOLUME;
+        if(currentVolume == 0) cmd += "mute 0%";
+        else cmd += "unmute "+currentVolume+"%";
+        SSHAsyncTask task = new SSHAsyncTask(this, new Command("volume", cmd, null));
+        task.execTask();
         // Remove the SeekBar from the ActionBar
         //mShowingControls = false;
         //getSupportActionBar().setDisplayShowCustomEnabled(false);

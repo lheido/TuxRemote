@@ -37,8 +37,7 @@ public class AppFragment extends Fragment {
 //    private FadingActionBarHelperBase mFadingHelper;
 
     /**
-     * Returns a new instance of this fragment for the given section
-     * number.
+     * Returns a new instance of this fragment for the given app.
      */
     public static AppFragment newInstance(App app) {
         AppFragment fragment = new AppFragment();
@@ -70,12 +69,13 @@ public class AppFragment extends Fragment {
         View view = inflater.inflate(R.layout.app_fragment, container, false);
         if(view != null) {
             listView = (ListView) view.findViewById(R.id.cmd_list);
-            adapter = new AppAdapter(getActivity().getApplicationContext(), cmds);
+            adapter = new AppAdapter(Global.getStaticContext(), cmds);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    // connect at this server <position>
+                    SSHAsyncTask task = new SSHAsyncTask((MainActivity)getActivity(), cmds.get(position));
+                    task.execTask();
                 }
             });
         }
@@ -95,10 +95,12 @@ public class AppFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        appName = getArguments().getString(ARG_APP_NAME);
-        appHexaId = getArguments().getString(ARG_HEXAID);
-        appTitle = getArguments().getString(ARG_TITLE);
-        appPid = getArguments().getString(ARG_PID);
+        if(getArguments() != null) {
+            appName = getArguments().getString(ARG_APP_NAME);
+            appHexaId = getArguments().getString(ARG_HEXAID);
+            appTitle = getArguments().getString(ARG_TITLE);
+            appPid = getArguments().getString(ARG_PID);
+        }
         ((MainActivity) activity).onSectionAttached(appName);
         context = ((MainActivity) activity).getApplicationContext();
 //        mFadingHelper = new FadingActionBarHelper()

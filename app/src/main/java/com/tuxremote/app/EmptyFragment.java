@@ -30,6 +30,7 @@ public class EmptyFragment extends Fragment{
                 }
             }
         }
+//        Global.session.scp("/home/ubuntu/.config/TuxRemote/config.xml", "config.xml");
         return rootView;
     }
 }

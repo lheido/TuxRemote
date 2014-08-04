@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -60,8 +62,8 @@ public class ConnectFragment extends Fragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     // connect at this server <position>
                     Server s = servers.get(position);
-                    TestConnexion test = new TestConnexion(act,s);
-                    test.execute();
+                    connexionTask test = new connexionTask(act,s);
+                    test.execTask();
                 }
             });
             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -112,8 +114,25 @@ public class ConnectFragment extends Fragment {
         Set<String> list = pref.getStringSet(TuxRemoteUtils.SERVERS_LIST, new HashSet<String>());
         for(String name : list){
             String[] data = pref.getString(name, "").split(TuxRemoteUtils.PREF_SPLIT);
-            Server s = new Server(name, data[0], data[1], (data.length == 3) ? data[2]: null);
-            serversList.add(s);
+            try {
+                Server s = new Server(name, data[0], data[1], (data.length == 3) ? data[2] : null);
+                TestConnexionTask task = new TestConnexionTask((MainActivity)getActivity(), s) {
+                    @Override
+                    protected void onPostExecute(Boolean result) {
+                        server.setAvailable(result);
+                        try {
+                            session.disconnect();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                };
+                task.execTask();
+                serversList.add(s);
+            }catch (Exception e){
+                Toast.makeText(Global.getStaticContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         }
         return serversList;
     }
@@ -225,6 +244,7 @@ public class ConnectFragment extends Fragment {
                 convertView = LayoutInflater.from(context).inflate(R.layout.server, viewGroup, false);
                 holder.name = (TextView) convertView.findViewById(R.id.name);
                 holder.ip = (TextView) convertView.findViewById(R.id.ip_address);
+                holder.available = (View) convertView.findViewById(R.id.available);
                 convertView.setTag(holder);
             }
             else
@@ -232,21 +252,23 @@ public class ConnectFragment extends Fragment {
 
             holder.name.setText(server.getName());
             holder.ip.setText(server.getIp());
+            holder.available.setBackgroundColor(context.getResources().getColor(server.isAvailable() ? R.color.green : R.color.black));
             return convertView;
         }
 
         private class ViewHolder {
             public TextView name;
             public TextView ip;
+            public View available;
         }
     }
 
-    public class TestConnexion extends AsyncTask<Void, Void, Boolean> {
+    private class connexionTask extends AsyncTask<Void, Void, Boolean> {
 
         private final Server server;
         private WeakReference<MainActivity> act;
 
-        TestConnexion(MainActivity activity, Server s){
+        connexionTask(MainActivity activity, Server s){
             server = s;
             link(activity);
         }
@@ -258,13 +280,17 @@ public class ConnectFragment extends Fragment {
         @Override
         protected void onPreExecute(){
             if(act.get() != null) {
-                act.get().setProgressBarIndeterminateVisibility(true);
+                try {
+                    act.get().setProgressBarIndeterminateVisibility(true);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            Global.session = new SshSession(server.getUserId(), server.getIp(), null);
+            Global.session = new SshSession(server.getUserId(), server.getIp(), null, 22);
             if(server.getPassword() != null)
                 Global.session.setPassword(server.getPassword());
             return Global.session.connect();
@@ -283,7 +309,19 @@ public class ConnectFragment extends Fragment {
             }
             Toast.makeText(Global.getStaticContext(), message, Toast.LENGTH_SHORT).show();
             if(act.get() != null) {
-                act.get().setProgressBarIndeterminateVisibility(false);
+                try {
+                    act.get().setProgressBarIndeterminateVisibility(false);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public void execTask() {
+            if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
+                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                execute();
             }
         }
     }
@@ -296,5 +334,44 @@ public class ConnectFragment extends Fragment {
          * Called when server item is selected and session.connect() return true.
          */
         void onConnect(Server server);
+    }
+
+    private abstract class TestConnexionTask extends AsyncTask<Void, Void, Boolean>{
+        protected Server server;
+        protected WeakReference<MainActivity> actRef;
+        protected SshSession session;
+
+        public TestConnexionTask(MainActivity activity, Server s) {
+            server = s;
+            link(activity);
+        }
+
+        private void link(MainActivity activity) {
+            actRef = new WeakReference<MainActivity>(activity);
+        }
+
+        @Override
+        protected void onPreExecute(){
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            session = new SshSession(server.getUserId(), server.getIp(), null, 22);
+            if(server.getPassword() != null)
+                session.setPassword(server.getPassword());
+            return session.connect();
+        }
+
+        @Override
+        abstract protected void onPostExecute (Boolean result);
+
+        public void execTask() {
+            if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
+                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                execute();
+            }
+        }
     }
 }

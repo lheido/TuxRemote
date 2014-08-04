@@ -2,13 +2,15 @@ package com.tuxremote.app;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
 
 import java.lang.ref.WeakReference;
 
-public class SSHAsyncTask extends AsyncTask<Void, Void, Boolean> {
+public class SSHAsyncTask extends AsyncTask<Void, BashReturn, Boolean> {
 
     private final Command cmd;
     private WeakReference<MainActivity> act;
@@ -26,7 +28,7 @@ public class SSHAsyncTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPreExecute () {
         if(act.get() != null){
-            context = act.get().getApplicationContext();
+            context = Global.getStaticContext();
         }
     }
 
@@ -34,16 +36,21 @@ public class SSHAsyncTask extends AsyncTask<Void, Void, Boolean> {
     protected Boolean doInBackground(Void... voids) {
         try {
             BashReturn retour = Global.session.SetCommand(cmd.getCmd());
-            if(retour != null)
-                Log.v("DoInBackground", ""+retour.getBashReturn().toString());
+            if(retour != null) {
+                Log.v("DoInBackground", "" + retour.getBashReturn().toString());
+                publishProgress(retour);
+
+            }
+            return true;
         }catch (Exception e){
             e.printStackTrace();
+            Toast.makeText(context, "Erreur cmd "+cmd.getName(), Toast.LENGTH_SHORT).show();
+            return false;
         }
-        return null;
     }
 
     @Override
-    protected void onProgressUpdate (Void... prog) {
+    protected void onProgressUpdate (BashReturn... prog) {
         if (act.get() != null){
             //act.get().updateProgress(prog[0]);
         }
@@ -52,5 +59,13 @@ public class SSHAsyncTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute (Boolean result) {
 
+    }
+
+    public void execTask() {
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
+            executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            execute();
+        }
     }
 }

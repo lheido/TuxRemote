@@ -25,5 +25,7 @@
 
     <color name="black">#FF000000</color>
     <color name="grey_low">#FF242424</color>
+    <color name="green">#FF00AA00</color>
+    <color name="transparent">#00000000</color>
 
 </resources>
