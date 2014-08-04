@@ -157,28 +157,28 @@ public class MainActivity extends ActionBarActivity
             // Set the progress to the current volume level
             mVolumeControls.setProgress(currentVolume);
         }
-        else if(id == R.id.action_restart){
-            final MainActivity act = this;
-            TuxRemoteUtils.TuxRemoteDialog alert = new TuxRemoteUtils.TuxRemoteDialog(this, R.layout.alert_dialog, "Redémarrer"){
-                @Override
-                public void customInit() {
-                    TextView label = (TextView)findViewById(R.id.alert_label);
-                    label.setText("Voulez vous vraiment, vraiment, mais alors vraiment redémarrer le serveur?");
-                }
-
-                @Override
-                public void customCancel() {}
-
-                @Override
-                public void customOk() {
-                    Log.v("RESTART", "Test Command");
-                    SSHAsyncTask task = new SSHAsyncTask(act, new Command("restart", TuxRemoteUtils.CMD_RESTART, null));
-                    task.execute();
-                }
-            };
-            alert.show();
-            return true;
-        }
+//        else if(id == R.id.action_restart){
+//            final MainActivity act = this;
+//            TuxRemoteUtils.TuxRemoteDialog alert = new TuxRemoteUtils.TuxRemoteDialog(this, R.layout.alert_dialog, "Redémarrer"){
+//                @Override
+//                public void customInit() {
+//                    TextView label = (TextView)findViewById(R.id.alert_label);
+//                    label.setText("Voulez vous vraiment, vraiment, mais alors vraiment redémarrer le serveur?");
+//                }
+//
+//                @Override
+//                public void customCancel() {}
+//
+//                @Override
+//                public void customOk() {
+//                    Log.v("RESTART", "Test Command");
+//                    SSHAsyncTask task = new SSHAsyncTask(act, new Command("restart", TuxRemoteUtils.CMD_RESTART, null));
+//                    task.execute();
+//                }
+//            };
+//            alert.show();
+//            return true;
+//        }
         else if(id == R.id.action_shutdown){
             final MainActivity act = this;
             TuxRemoteUtils.TuxRemoteDialog alert = new TuxRemoteUtils.TuxRemoteDialog(this, R.layout.alert_dialog, "Eteindre"){

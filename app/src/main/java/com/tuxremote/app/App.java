@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class App {
+    private String wmctrlName = null;
     private String name = null;
     private String id = null; // wmctrl identifier in hexadecimal.
     private String pid = null;
@@ -30,6 +31,12 @@ public class App {
         this.pid = pid;
         this.name = name;
         this.title = title;
+        this.icon = icon;
+    }
+
+    public App(String name, String wmctrl_name, String icon){
+        this.name = name;
+        this.wmctrlName = wmctrl_name;
         this.icon = icon;
     }
 

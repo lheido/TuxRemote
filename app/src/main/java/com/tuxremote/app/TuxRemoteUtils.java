@@ -15,7 +15,8 @@ import java.io.FileOutputStream;
 public class TuxRemoteUtils {
 
     public final static String CMD_RESTART  = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart";
-    public final static String CMD_SHUTDOWN = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager  org.freedesktop.ConsoleKit.Manager.Stop";
+//    public final static String CMD_SHUTDOWN = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager  org.freedesktop.ConsoleKit.Manager.Stop";
+    public final static String CMD_SHUTDOWN = "sudo $HOME/.config/TuxRemote/TuxRemote-shutdown";
     public final static String CMD_VOLUME = "amixer -D pulse sset Master ";
 
     public final static String SPLIT_CHAR = ":";

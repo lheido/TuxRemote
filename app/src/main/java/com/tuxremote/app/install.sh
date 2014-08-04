@@ -15,5 +15,5 @@ if [ -f $config ]
     echo "création du fichier $config"
     echo "plop" > $config
 fi
-cp /sbin/shutdown $HOME/.config/TuxeRemote/TuxeRemote-shutdown
-sudo echo "$USER ALL = NOPASSWD : /home/$USER/.config/TuxRemote/TuxeRemote-shutdown" > etc/sudoers
+cp /sbin/shutdown $HOME/.config/TuxRemote/TuxRemote-shutdown
+sudo echo "$USER ALL = NOPASSWD : /home/$USER/.config/TuxRemote/TuxRemote-shutdown" >> /etc/sudoers
