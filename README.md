@@ -41,5 +41,5 @@ dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedes
 
  - Wmctrl:
 ```
-wmctrl -lpx | awk  'BEGIN{FS=" "} {printf $1" " $3" "$4" " ;for(i=6; i<=NF; i++){printf $i" "}; printf "\n"} '
+wmctrl -lpx | awk  'BEGIN{FS=" "} NF>4 && $4!="N/A"{printf $1" " $3" "$4" " ;for(i=6; i<=NF; i++){printf $i" "}; printf "\n"} '
 ```
