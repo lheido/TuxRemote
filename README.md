@@ -17,10 +17,10 @@ cmd_name:cmd_sh:icon_path
 
 
 ##ToDo
- - Revoir l'histoire avec la liste des commandes
-    - Fonction qui renvoit la liste des commandes liées à une app.
+ - liste des app dans le config.xml:
     - Fonction qui définit la liste des icones à télécharger, avec leur nom sur le serveur et leur nom local.
     - A la connection supprimer les icones inutiles et télécharger les icones manquant indiqués dans le fichier de conf.
+ - Filtrer les app wmctrl avec les app du config.xml
  - NavigationDrawer:
     - itemLongClick -> menu (kill all without it/etc...) 
  - Settings

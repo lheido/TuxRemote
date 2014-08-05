@@ -79,7 +79,7 @@ public class AppFragment extends Fragment {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    SSHAsyncTask task = new SSHAsyncTask((MainActivity)getActivity(), cmds.get(position));
+                    SSHAsyncTask task = new SSHAsyncTask(cmds.get(position));
                     task.execTask();
                 }
             });

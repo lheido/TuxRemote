@@ -2,6 +2,7 @@ package com.tuxremote.app;
 
 import android.app.FragmentManager;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.preference.PreferenceManager;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
 
 import java.util.ArrayList;
 
@@ -33,7 +36,6 @@ public class EmptyFragment extends Fragment{
                 }
             }
         }
-//        Global.session.scp("/home/ubuntu/.config/TuxRemote/config.xml", "config.xml");
         return rootView;
     }
 }

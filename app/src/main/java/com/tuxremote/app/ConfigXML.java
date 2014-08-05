@@ -118,4 +118,33 @@ public class ConfigXML {
         }
         return cmdList;
     }
+
+    public App getApplication(String appName){
+        App app = null;
+        int eventType = 0;
+        try {
+            xpp.setInput(context.openFileInput(TuxRemoteUtils.CONFIG_FILE), null);
+            eventType = xpp.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType){
+                    case XmlPullParser.START_DOCUMENT: break;
+                    case XmlPullParser.START_TAG:
+                        if(xpp.getName().equals(APPLICATION)) {
+                            App tmp = getApp();
+                            if (getApp().getName().equals(appName))
+                                app = tmp;
+                        }
+                        break;
+                    case XmlPullParser.END_TAG: break;
+                }
+                eventType = xpp.next();
+            }
+
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return app;
+    }
 }

@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
+
 import java.util.ArrayList;
 
 import de.timroes.android.listview.EnhancedListView;
@@ -305,6 +307,30 @@ public class NavigationDrawerFragment extends Fragment {
 
     public void closeDrawer() {
         mDrawerLayout.closeDrawer(mFragmentContainerView);
+    }
+
+    public void dowloadConfigFile(){
+        try {
+            SSHAsyncTask task = new SSHAsyncTask(new Command("downloadFile", "cat ~/.config/TuxRemote/config.xml", null)) {
+                @Override
+                protected void onProgressUpdate(BashReturn... prog) {
+                    ArrayList<String> retour = prog[0].getBashReturn();
+                    String content = "";
+                    for (String line : retour) {
+                        content += line;
+                    }
+                    TuxRemoteUtils.saveFileToInternalStorage(Global.getStaticContext(), "config.xml", content);
+                    fooo();
+                }
+            };
+            task.execTask();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void fooo(){
+        Log.v("fooo", ""+(new ConfigXML(Global.getStaticContext()).getAppList().size()));
     }
 
     /**

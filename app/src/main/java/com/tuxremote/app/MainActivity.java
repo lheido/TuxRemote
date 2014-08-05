@@ -4,11 +4,9 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
@@ -19,8 +17,6 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
@@ -62,7 +58,7 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        if(!Global.userIsConnected()) disconnectFragment();
+        if(!Global.userIsConnected()) onDisconnect();
 
         // Volume
         final View view = getLayoutInflater().inflate(R.layout.volume_action_view, null);
@@ -91,11 +87,12 @@ public class MainActivity extends ActionBarActivity
         setActionBarTitle(app.getName());
     }
 
-    public void disconnectFragment(){
+    public void onDisconnect(){
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, ConnectFragment.newInstance())
                 .commit();
+        Global.setUserIsConnected(false);
     }
 
     @Override
@@ -194,7 +191,7 @@ public class MainActivity extends ActionBarActivity
 
                 @Override
                 public void customOk() {
-                    SSHAsyncTask task = new SSHAsyncTask(act, new Command("shutDown", TuxRemoteUtils.CMD_SHUTDOWN, null));
+                    SSHAsyncTask task = new SSHAsyncTask(new Command("shutDown", TuxRemoteUtils.CMD_SHUTDOWN, null));
                     task.execute();
                 }
             };
@@ -203,8 +200,7 @@ public class MainActivity extends ActionBarActivity
         }
         else if(id == R.id.action_deconnexion){
             Global.session.disconnect();
-            Global.setUserIsConnected(false);
-            disconnectFragment();
+            onDisconnect();
             restoreActionBar();
             mShowingControls = false;
             getSupportActionBar().setDisplayShowCustomEnabled(false);
@@ -269,7 +265,7 @@ public class MainActivity extends ActionBarActivity
         String cmd = TuxRemoteUtils.CMD_VOLUME;
         if(currentVolume == 0) cmd += "mute 0%";
         else cmd += "unmute "+currentVolume+"%";
-        SSHAsyncTask task = new SSHAsyncTask(this, new Command("volume", cmd, null));
+        SSHAsyncTask task = new SSHAsyncTask(new Command("volume", cmd, null));
         task.execTask();
         // Remove the SeekBar from the ActionBar
         //mShowingControls = false;

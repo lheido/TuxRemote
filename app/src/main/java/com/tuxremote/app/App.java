@@ -34,6 +34,13 @@ public class App {
         this.icon = icon;
     }
 
+    public App(String hexaId, String pid, String wmctrlName, String title){
+        this.id = hexaId;
+        this.pid = pid;
+        this.wmctrlName = wmctrlName;
+        this.title = title;
+    }
+
     public App(String name, String wmctrl_name, String icon){
         this.name = name;
         this.wmctrlName = wmctrl_name;
@@ -42,11 +49,24 @@ public class App {
 
     public void setIconToView(Context context, ImageView view){
         if(this.icon != null){
-            File filePath = context.getFileStreamPath(this.icon);
-            Picasso.with(context).load(filePath).fit().centerCrop().into(view);
+            try {
+                File filePath = context.getFileStreamPath(this.icon);
+                Picasso.with(context).load(filePath).fit().centerCrop().into(view);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }else{
             Picasso.with(context).load(TuxRemoteUtils.DEFAULT_ICON_APP).fit().centerCrop().into(view);
         }
+    }
+
+    /**
+     * use to merge App from wmctrl with config.xml
+     * @param app
+     */
+    public void merge(App app){
+        if(app != null)
+            this.icon = app.icon;
     }
 
     public String getHexaId(){

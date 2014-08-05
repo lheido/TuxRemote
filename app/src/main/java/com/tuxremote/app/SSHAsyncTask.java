@@ -13,23 +13,21 @@ import java.lang.ref.WeakReference;
 public class SSHAsyncTask extends AsyncTask<Void, BashReturn, Boolean> {
 
     private final Command cmd;
-    private WeakReference<MainActivity> act;
+//    private WeakReference<MainActivity> act;
     private Context context;
 
-    public SSHAsyncTask(MainActivity activity, Command cmd){
-        link(activity);
+    public SSHAsyncTask(Command cmd){
+//        link(activity);
         this.cmd = cmd;
     }
 
-    private void link(MainActivity activity) {
-        act = new WeakReference<MainActivity>(activity);
-    }
+//    private void link(MainActivity activity) {
+//        act = new WeakReference<MainActivity>(activity);
+//    }
 
     @Override
     protected void onPreExecute () {
-        if(act.get() != null){
-            context = Global.getStaticContext();
-        }
+        context = Global.getStaticContext();
     }
 
     @Override
@@ -39,7 +37,6 @@ public class SSHAsyncTask extends AsyncTask<Void, BashReturn, Boolean> {
             if(retour != null) {
                 Log.v("DoInBackground", "" + retour.getBashReturn().toString());
                 publishProgress(retour);
-
             }
             return true;
         }catch (Exception e){
@@ -50,16 +47,10 @@ public class SSHAsyncTask extends AsyncTask<Void, BashReturn, Boolean> {
     }
 
     @Override
-    protected void onProgressUpdate (BashReturn... prog) {
-        if (act.get() != null){
-            //act.get().updateProgress(prog[0]);
-        }
-    }
+    protected void onProgressUpdate (BashReturn... prog) {}
 
     @Override
-    protected void onPostExecute (Boolean result) {
-
-    }
+    protected void onPostExecute (Boolean result) {}
 
     public void execTask() {
         if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {

@@ -5,12 +5,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 
+import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 public class TuxRemoteUtils {
 
@@ -106,6 +110,11 @@ public class TuxRemoteUtils {
         public abstract void customCancel();
 
         public abstract void customOk();
+    }
+
+    public static App getAppFromWmctrlLine(String line){
+        String[] splited = line.split(" ", 4);
+        return new App(splited[0], splited[1], splited[2], (splited.length == 4)? splited[3]: "");
     }
 
     public static SharedPreferences getPref(Context context){
