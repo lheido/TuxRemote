@@ -88,11 +88,7 @@ public class AppFragment extends Fragment {
     }
 
     private static ArrayList<Command> loadFromConfigFile(Context context, String appName, String appHexaId) {
-        ArrayList<Command> list = new ArrayList<Command>();
-        //retrieve commands list for appName into config file
-        //use static methode Command.createCmdsList(cmd_string_arrayList)
-        //or use static methode Command.newCommand(cmd_string_line_from_config_file)
-        //use static methode Command.cmdClose(appHexaId) to add close command at the end of list
+        ArrayList<Command> list = new ConfigXML(context).getCommandList(appName);
         list.add(Command.cmdClose(appHexaId));
         return list;
     }

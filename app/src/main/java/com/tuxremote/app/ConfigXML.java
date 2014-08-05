@@ -8,6 +8,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,18 +21,17 @@ public class ConfigXML {
     private static final String CMD_SHELL = "cmd";
     private static final String CMD_ICON = "icon";
     private static final String COMMAND = "Command";
+    private final Context context;
     private XmlPullParser xpp = null;
     private XmlPullParserFactory factory = null;
 
     public ConfigXML(Context context){
+        this.context = context;
         try {
             factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             xpp = factory.newPullParser();
-            xpp.setInput(context.openFileInput(TuxRemoteUtils.CONFIG_FILE), null);
         } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -66,6 +66,7 @@ public class ConfigXML {
         ArrayList<App> appList = new ArrayList<App>();
         int eventType = 0;
         try {
+            xpp.setInput(context.openFileInput(TuxRemoteUtils.CONFIG_FILE), null);
             eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType){
@@ -93,6 +94,7 @@ public class ConfigXML {
         App currentApp = null;
         int eventType = 0;
         try {
+            xpp.setInput(context.openFileInput(TuxRemoteUtils.CONFIG_FILE), null);
             eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType){

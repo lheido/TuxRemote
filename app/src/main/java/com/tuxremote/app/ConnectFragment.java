@@ -53,10 +53,10 @@ public class ConnectFragment extends Fragment {
         }
         if(rootView != null) {
             listView = (ListView) rootView.findViewById(R.id.list);
-//            servers = new ArrayList<Server>();
-            servers = retrieveServersList();
+            servers = new ArrayList<Server>();
             adapter = new ConnectAdapter(Global.getStaticContext(), servers);
             listView.setAdapter(adapter);
+            retrieveServersList();
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -108,33 +108,23 @@ public class ConnectFragment extends Fragment {
         pref.edit().putString(server.getName(), str).commit();
     }
 
-    private ArrayList<Server> retrieveServersList(){
-        ArrayList<Server> serversList = new ArrayList<Server>();
+    private void retrieveServersList(){
         SharedPreferences pref = TuxRemoteUtils.getPref(Global.getStaticContext());
         Set<String> list = pref.getStringSet(TuxRemoteUtils.SERVERS_LIST, new HashSet<String>());
         for(String name : list){
             String[] data = pref.getString(name, "").split(TuxRemoteUtils.PREF_SPLIT);
             try {
-                Server s = new Server(name, data[0], data[1], (data.length == 3) ? data[2] : null);
-                TestConnexionTask task = new TestConnexionTask((MainActivity)getActivity(), s) {
-                    @Override
-                    protected void onPostExecute(Boolean result) {
-                        server.setAvailable(result);
-                        try {
-                            session.disconnect();
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        adapter.notifyDataSetChanged();
-                    }
-                };
-                task.execTask();
-                serversList.add(s);
+                if(data.length > 1) {
+                    Server s = new Server(name, data[0], data[1], (data.length == 3) ? data[2] : null);
+                    add(s);
+                }else{
+                    //serveur pas bon
+                    Toast.makeText(Global.getStaticContext(), "serveur pas bon", Toast.LENGTH_LONG).show();
+                }
             }catch (Exception e){
-                Toast.makeText(Global.getStaticContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(Global.getStaticContext(), "retrieveServerList\n\n"+e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
-        return serversList;
     }
 
     public void prefRemoveServer(String name){
@@ -194,11 +184,26 @@ public class ConnectFragment extends Fragment {
                 server.setIp(entryIp.getText().toString());
                 server.setUserId(entryUserId.getText().toString());
                 server.setPassword(entryPassword.getText().toString());
+                server.setAvailable(false);
+                adapter.notifyDataSetChanged();
                 save_server(server);
-                if(server.getName().equals(name))
+                if(!server.getName().equals(name))
                     prefRemoveServer(name);
                 adapter.notifyDataSetChanged();
                 prefUpdateServersList();
+                TestConnexionTask task = new TestConnexionTask((MainActivity)getActivity(), server) {
+                    @Override
+                    protected void onPostExecute(Boolean result) {
+                        server.setAvailable(result);
+                        try {
+                            session.disconnect();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                };
+                task.execTask();
             }
         };
         dialog.show();
@@ -206,6 +211,19 @@ public class ConnectFragment extends Fragment {
 
     public void add(Server server) {
         servers.add(server);
+        TestConnexionTask task = new TestConnexionTask((MainActivity)getActivity(), server) {
+            @Override
+            protected void onPostExecute(Boolean result) {
+                server.setAvailable(result);
+                try {
+                    session.disconnect();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                adapter.notifyDataSetChanged();
+            }
+        };
+        task.execTask();
         adapter.notifyDataSetChanged();
     }
 

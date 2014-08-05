@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
