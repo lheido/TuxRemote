@@ -65,6 +65,7 @@ public class App {
      * @param app
      */
     public void merge(App app){
+        this.name = app.getName();
         if(app != null)
             this.icon = app.icon;
     }
@@ -97,6 +98,10 @@ public class App {
     }
     public void setName(String n){
         this.name = n;
+    }
+
+    public String getWmctrlName() {
+        return wmctrlName;
     }
 
     public static abstract class ListAppTask extends AsyncTask<Void, Void, Boolean>{

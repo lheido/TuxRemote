@@ -47,8 +47,10 @@ public class ConnectFragment extends Fragment {
         FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager != null) {
             NavigationDrawerFragment frag = (NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
-            if (frag != null && frag.isDrawerOpen()) {
-                frag.closeDrawer();
+            if (frag != null){
+                if(frag.isDrawerOpen())
+                    frag.closeDrawer();
+                frag.clearScheduler();
             }
         }
         if(rootView != null) {

@@ -8,11 +8,18 @@ Android app to control your linux desktop via ssh (with Jsch).
 # wmctrl, openssh-server
 ```
 
-##TuxRemote.config
+##config.xml
 
-```config
-[APP NAME:wmctrl_name]
-cmd_name:cmd_sh:icon_path
+```xml
+<Application
+    name=""
+    wmctrl_name=""
+    icon="">
+    <Command
+        name=""
+        cmd=""
+        icon=""/>
+</Application>
 ```
 
 

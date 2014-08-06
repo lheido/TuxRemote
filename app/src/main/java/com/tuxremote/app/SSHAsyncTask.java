@@ -35,7 +35,6 @@ public class SSHAsyncTask extends AsyncTask<Void, BashReturn, Boolean> {
         try {
             BashReturn retour = Global.session.SetCommand(cmd.getCmd());
             if(retour != null) {
-                Log.v("DoInBackground", "" + retour.getBashReturn().toString());
                 publishProgress(retour);
             }
             return true;

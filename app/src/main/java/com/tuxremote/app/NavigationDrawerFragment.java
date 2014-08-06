@@ -1,6 +1,8 @@
 package com.tuxremote.app;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -23,6 +25,9 @@ import android.widget.Toast;
 import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import de.timroes.android.listview.EnhancedListView;
 
@@ -37,6 +42,9 @@ public class NavigationDrawerFragment extends Fragment {
      * Remember the position of the selected item.
      */
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
+    private static final long FIRST_DELAY = 0;
+    private static final long PERIOD = 10;
+    private static final TimeUnit UNIT = TimeUnit.SECONDS;
 
     /**
      * A pointer to the current callbacks instance (the Activity).
@@ -58,6 +66,8 @@ public class NavigationDrawerFragment extends Fragment {
     private AppListViewAdapter adapter;
     private App.ListAppTask task;
     private Context context;
+    private ScheduledExecutorService scheduler = null;
+    protected static Handler notify;
 
     public NavigationDrawerFragment() {
     }
@@ -97,7 +107,8 @@ public class NavigationDrawerFragment extends Fragment {
                     @Override
                     public void discard() {
                         Command cmd = Command.cmdClose(item.getHexaId());
-                        //exec close command
+                        SSHAsyncTask task = new SSHAsyncTask(cmd);
+                        task.execTask();
                     }
                 };
             }
@@ -132,6 +143,14 @@ public class NavigationDrawerFragment extends Fragment {
         };
         adapter = new AppListViewAdapter(getActivity().getApplicationContext(), listApp);
         mDrawerListView.setAdapter(adapter);
+
+        notify = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                adapter.notifyDataSetChanged();
+            }
+        };
+
 //        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
@@ -206,12 +225,29 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
+        try {
+            if (Global.userIsConnected())
+                updateAppList();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onPause(){
         super.onPause();
+        Log.v("onPause", "onPause called");
+        if(scheduler != null)
+            scheduler.shutdown();
         mDrawerListView.discardUndo();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.v("onDestroy", "onDestroy called");
+        if(scheduler != null && !scheduler.isShutdown())
+            scheduler.shutdown();
     }
 
     private void selectItem(int position) {
@@ -320,7 +356,8 @@ public class NavigationDrawerFragment extends Fragment {
                         content += line;
                     }
                     TuxRemoteUtils.saveFileToInternalStorage(Global.getStaticContext(), "config.xml", content);
-                    fooo();
+                    Log.v("downloadConfigFile.onProgessUpdate", "save file called");
+                    updateAppList();
                 }
             };
             task.execTask();
@@ -329,8 +366,47 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
-    public void fooo(){
-        Log.v("fooo", ""+(new ConfigXML(Global.getStaticContext()).getAppList().size()));
+    public void updateAppList(){
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(updateThread(), FIRST_DELAY, PERIOD, UNIT);
+    }
+
+    public Runnable updateThread(){
+        return new Runnable() {
+            public void run() {
+                try {
+                    Log.v("updateThread", "run called");
+                    ArrayList<App> configList = new ConfigXML(context).getAppList();
+                    BashReturn retour = Global.session.SetCommand(TuxRemoteUtils.CMD_WMCTRL);
+                    ArrayList<App> wmctrlList = TuxRemoteUtils.getAppListFromWmctrl(retour.getBashReturn());
+                    listApp.clear();
+                    for (App a : wmctrlList) {
+                        if(isAvailableApp(a, configList)) {
+                            listApp.add(a);
+                        }
+                    }
+                    notify.sendEmptyMessage(0);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+
+    public static boolean isAvailableApp(App a, ArrayList<App> configList){
+        for (App appAvailable : configList){
+            if(appAvailable.getWmctrlName().equals(a.getWmctrlName())) {
+                a.merge(appAvailable);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void clearScheduler() {
+        if(scheduler != null && !scheduler.isShutdown()){
+            scheduler.shutdown();
+        }
     }
 
     /**

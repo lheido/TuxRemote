@@ -27,13 +27,15 @@ public class EmptyFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.empty_fragment, container, false);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(Global.getStaticContext());
-        if(pref.getBoolean("drawer_open_at_connexion", true)) {
-            FragmentManager fragmentManager = getFragmentManager();
-            if (fragmentManager != null) {
-                NavigationDrawerFragment frag = (NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
-                if (frag != null) {
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager != null) {
+            NavigationDrawerFragment frag = (NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+            if (frag != null){
+                if(pref.getBoolean("drawer_open_at_connexion", true)) {
                     frag.openDrawer();
                 }
+                // download config.xml
+                frag.dowloadConfigFile();
             }
         }
         return rootView;

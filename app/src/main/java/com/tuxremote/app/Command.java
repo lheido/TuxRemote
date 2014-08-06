@@ -28,12 +28,17 @@ public class Command {
     }
 
     public void setIconToView(Context context, ImageView view){
-        if(this.icon != null){
-            File filePath = context.getFileStreamPath(this.icon);
-            Picasso.with(context).load(filePath).fit().centerInside().into(view);
-        }else{
-            Picasso.with(context).load(TuxRemoteUtils.DEFAULT_CLOSE_RES).fit().centerInside().into(view);
+        if(this.icon != null) {
+            if (this.icon.equals("close")) {
+                Picasso.with(context).load(TuxRemoteUtils.DEFAULT_CLOSE_RES).fit().centerInside().into(view);
+            } else{
+                File filePath = context.getFileStreamPath(this.icon);
+                Picasso.with(context).load(filePath).fit().centerInside().into(view);
+            }
         }
+//        else{
+//            Picasso.with(context).load(TuxRemoteUtils.DEFAULT_ICON_APP).fit().centerInside().into(view);
+//        }
     }
 
     public String getName(){
@@ -46,7 +51,7 @@ public class Command {
     }
 
     public static Command cmdClose(String hexaId){
-        return new Command("close", "wmctrl -i -c "+hexaId, null);
+        return new Command("close", "DISPLAY=:0 wmctrl -i -c "+hexaId, "close");
     }
 
     public static ArrayList<Command> createCmdsList(final ArrayList<String> list){

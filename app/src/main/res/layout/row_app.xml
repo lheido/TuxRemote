@@ -8,7 +8,6 @@
         android:id="@+id/icon"
         android:layout_width="150dp"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_launcher"
         android:layout_alignTop="@+id/app_name"
         android:layout_alignBottom="@+id/window_title"
         android:layout_alignRight="@+id/app_name">
@@ -18,9 +17,10 @@
         android:id="@+id/app_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/default_label_item"
-        android:textSize="22sp"
+        android:textSize="16sp"
         android:textColor="#DDDDDD"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:layout_marginLeft="10dp"
         android:paddingTop="5dp">
     </TextView>
@@ -29,8 +29,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_name"
-        android:text="@string/default_label_item"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:textColor="#DDDDDD"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:layout_alignLeft="@id/app_name"/>
 </RelativeLayout>

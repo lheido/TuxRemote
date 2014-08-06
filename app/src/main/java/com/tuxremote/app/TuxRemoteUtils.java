@@ -29,6 +29,7 @@ public class TuxRemoteUtils {
     public static final String SERVERS_LIST = "servers_list";
     public static final String PREF_SPLIT = "°SPLIT°°";
     public static final String CONFIG_FILE = "config.xml";
+    public static final String CMD_WMCTRL = "DISPLAY=:0 wmctrl -lpx | awk  'BEGIN{FS=\" \"} NF>4 && $4!=\"N/A\"{printf $1\" \" $3\" \"$4\" \" ;for(i=6; i<=NF; i++){printf $i\" \"}; printf \"\\n\"} '";
 
     /**
      * Write image to internal storage
@@ -115,6 +116,13 @@ public class TuxRemoteUtils {
     public static App getAppFromWmctrlLine(String line){
         String[] splited = line.split(" ", 4);
         return new App(splited[0], splited[1], splited[2], (splited.length == 4)? splited[3]: "");
+    }
+
+    public static ArrayList<App> getAppListFromWmctrl(ArrayList<String> retour){
+        ArrayList<App> appList = new ArrayList<App>();
+        for (String line : retour)
+            appList.add(getAppFromWmctrlLine(line));
+        return appList;
     }
 
     public static SharedPreferences getPref(Context context){
