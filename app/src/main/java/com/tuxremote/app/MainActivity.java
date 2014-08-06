@@ -4,6 +4,8 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -18,9 +20,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        SeekBar.OnSeekBarChangeListener, ConnectFragment.OnConnectCallbacks {
+        SeekBar.OnSeekBarChangeListener, ConnectFragment.OnConnectCallbacks,
+        AppFragment.AppFragmentCallbacks{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -81,10 +86,24 @@ public class MainActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, AppFragment.newInstance(app))
+                .replace(R.id.container, AppFragment.newInstance(position, app))
                 .commit();
         currentApp = app;
         setActionBarTitle(app.getName());
+    }
+
+    @Override
+    public void testCurrentApp(ArrayList<App> appList) {
+        if(currentApp != null){
+            int i = 0;
+            while(i < appList.size() && currentApp.getHexaId().equals(appList.get(i).getHexaId())) i++;
+            if(i == appList.size() && !currentApp.getHexaId().equals(appList.get(i-1).getHexaId())){
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, EmptyFragment.newInstance())
+                        .commit();
+            }
+        }
     }
 
     public void onDisconnect(){
@@ -102,6 +121,15 @@ public class MainActivity extends ActionBarActivity
                 .replace(R.id.container, EmptyFragment.newInstance())
                 .commit();
         Global.setUserIsConnected(true);
+        SharedPreferences pref = TuxRemoteUtils.getPref(context);
+        NavigationDrawerFragment frag = (NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+        if (frag != null){
+            if(pref.getBoolean("drawer_open_at_connexion", true)) {
+                frag.openDrawer();
+            }
+            // download config.xml
+            frag.dowloadConfigFile();
+        }
     }
 
     public void onSectionAttached(String name) {
@@ -284,6 +312,22 @@ public class MainActivity extends ActionBarActivity
             Global.session.disconnect();
             Global.setUserIsConnected(false);
             Toast.makeText(this, "Déconnexion", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onCommandClose(int position) {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, EmptyFragment.newInstance())
+                .commit();
+        SharedPreferences pref = TuxRemoteUtils.getPref(context);
+        NavigationDrawerFragment frag = (NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+        if (frag != null){
+            if(pref.getBoolean("drawer_open_on_close_cmd", true)) {
+                frag.openDrawer();
+            }
+            frag.removeAt(position);
         }
     }
 }

@@ -9,16 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-
-import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class TuxRemoteUtils {
 
-    public final static String CMD_RESTART  = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart";
+//    public final static String CMD_RESTART  = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart";
 //    public final static String CMD_SHUTDOWN = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager  org.freedesktop.ConsoleKit.Manager.Stop";
     public final static String CMD_SHUTDOWN = "sudo $HOME/.config/TuxRemote/TuxRemote-shutdown";
     public final static String CMD_VOLUME = "amixer -D pulse sset Master ";
@@ -74,7 +71,7 @@ public class TuxRemoteUtils {
 
     public static abstract class TuxRemoteDialog extends Dialog{
         /**
-         *
+         * Custom dialog box
          * @param context   : Context android.
          * @param ressource : layout.
          * @param title     : dialog title.

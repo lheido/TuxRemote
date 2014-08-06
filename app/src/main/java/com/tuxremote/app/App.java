@@ -1,14 +1,11 @@
 package com.tuxremote.app;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.ArrayList;
 
 public class App {
     private String wmctrlName = null;
@@ -102,31 +99,5 @@ public class App {
 
     public String getWmctrlName() {
         return wmctrlName;
-    }
-
-    public static abstract class ListAppTask extends AsyncTask<Void, Void, Boolean>{
-
-        protected ArrayList<App> _listApp = null;
-
-        ListAppTask(){
-            _listApp = new ArrayList<App>();
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            // create app liste with wmctrl -lpx
-            return true;
-        }
-
-        @Override
-        abstract protected void onPostExecute(Boolean result);
-
-        public void execTask(){
-            if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
-                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            } else {
-                execute();
-            }
-        }
     }
 }

@@ -30,6 +30,7 @@ public class AppFragment extends Fragment {
     private static final String ARG_HEXAID = "hexaId";
     private static final String ARG_TITLE = "window_title";
     private static final String ARG_PID = "app_pid";
+    private static final String ARG_NUMBER = "currentSelectedItem";
     public static final String TAG="AppFragment";
     private AppAdapter adapter;
     private ListView listView;
@@ -39,18 +40,21 @@ public class AppFragment extends Fragment {
     private String appTitle;
     private String appPid;
     private Context context;
+    private AppFragmentCallbacks mCallbacks;
+    private int number;
 //    private FadingActionBarHelperBase mFadingHelper;
 
     /**
      * Returns a new instance of this fragment for the given app.
      */
-    public static AppFragment newInstance(App app) {
+    public static AppFragment newInstance(int position, App app) {
         AppFragment fragment = new AppFragment();
         Bundle args = new Bundle();
         args.putString(ARG_APP_NAME, app.getName());
         args.putString(ARG_HEXAID, app.getHexaId());
         args.putString(ARG_TITLE, app.getTitle());
         args.putString(ARG_PID, app.getPid());
+        args.putInt(ARG_NUMBER, position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,6 +83,8 @@ public class AppFragment extends Fragment {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    if(cmds.get(position).getName().equals("close"))
+                        mCallbacks.onCommandClose(number);
                     SSHAsyncTask task = new SSHAsyncTask(cmds.get(position));
                     task.execTask();
                 }
@@ -101,9 +107,15 @@ public class AppFragment extends Fragment {
             appHexaId = getArguments().getString(ARG_HEXAID);
             appTitle = getArguments().getString(ARG_TITLE);
             appPid = getArguments().getString(ARG_PID);
+            number = getArguments().getInt(ARG_NUMBER);
         }
         ((MainActivity) activity).onSectionAttached(appName);
         context = ((MainActivity) activity).getApplicationContext();
+        try {
+            mCallbacks = (AppFragmentCallbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
+        }
 //        mFadingHelper = new FadingActionBarHelper()
 //                .actionBarBackground(R.drawable.ab_background)
 //                .headerLayout(R.layout.app_header)
@@ -161,5 +173,15 @@ public class AppFragment extends Fragment {
             public TextView name;
             public ImageView icon;
         }
+    }
+
+    /**
+     * Callbacks interface that all activities using this fragment must implement.
+     */
+    public static interface AppFragmentCallbacks {
+        /**
+         * Called when an item in the navigation drawer is selected.
+         */
+        void onCommandClose(int position);
     }
 }

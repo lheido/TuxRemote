@@ -64,7 +64,6 @@ public class NavigationDrawerFragment extends Fragment {
 
     private ArrayList<App> listApp = null;
     private AppListViewAdapter adapter;
-    private App.ListAppTask task;
     private Context context;
     private ScheduledExecutorService scheduler = null;
     protected static Handler notify;
@@ -131,16 +130,6 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
         listApp = new ArrayList<App>();
-//        listApp.add(new App("hexaId", "pid", "name", "title", null));
-        //create list
-        task = new App.ListAppTask(){
-            @Override
-            protected void onPostExecute(Boolean result) {
-                listApp.clear();
-                listApp.addAll(_listApp);
-                adapter.notifyDataSetChanged();
-            }
-        };
         adapter = new AppListViewAdapter(getActivity().getApplicationContext(), listApp);
         mDrawerListView.setAdapter(adapter);
 
@@ -218,10 +207,6 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    public void load(){
-        task.execTask();
-    }
-
     @Override
     public void onResume(){
         super.onResume();
@@ -236,7 +221,6 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        Log.v("onPause", "onPause called");
         if(scheduler != null)
             scheduler.shutdown();
         mDrawerListView.discardUndo();
@@ -245,7 +229,6 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Log.v("onDestroy", "onDestroy called");
         if(scheduler != null && !scheduler.isShutdown())
             scheduler.shutdown();
     }
@@ -356,7 +339,6 @@ public class NavigationDrawerFragment extends Fragment {
                         content += line;
                     }
                     TuxRemoteUtils.saveFileToInternalStorage(Global.getStaticContext(), "config.xml", content);
-                    Log.v("downloadConfigFile.onProgessUpdate", "save file called");
                     updateAppList();
                 }
             };
@@ -375,7 +357,6 @@ public class NavigationDrawerFragment extends Fragment {
         return new Runnable() {
             public void run() {
                 try {
-                    Log.v("updateThread", "run called");
                     ArrayList<App> configList = new ConfigXML(context).getAppList();
                     BashReturn retour = Global.session.SetCommand(TuxRemoteUtils.CMD_WMCTRL);
                     ArrayList<App> wmctrlList = TuxRemoteUtils.getAppListFromWmctrl(retour.getBashReturn());
@@ -385,6 +366,7 @@ public class NavigationDrawerFragment extends Fragment {
                             listApp.add(a);
                         }
                     }
+                    mCallbacks.testCurrentApp(listApp);
                     notify.sendEmptyMessage(0);
                 }catch (Exception e){
                     e.printStackTrace();
@@ -409,6 +391,11 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
+    public void removeAt(int position) {
+        listApp.remove(position);
+        adapter.notifyDataSetChanged();
+    }
+
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
@@ -417,5 +404,6 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position, App app);
+        void testCurrentApp(ArrayList<App> appList);
     }
 }

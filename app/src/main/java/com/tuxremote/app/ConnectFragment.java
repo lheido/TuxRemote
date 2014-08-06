@@ -120,11 +120,10 @@ public class ConnectFragment extends Fragment {
                     Server s = new Server(name, data[0], data[1], (data.length == 3) ? data[2] : null);
                     add(s);
                 }else{
-                    //serveur pas bon
-                    Toast.makeText(Global.getStaticContext(), "serveur pas bon", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Global.getStaticContext(), "erreur serveur: "+name, Toast.LENGTH_SHORT).show();
                 }
             }catch (Exception e){
-                Toast.makeText(Global.getStaticContext(), "retrieveServerList\n\n"+e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(Global.getStaticContext(), "retrieveServerList\n\n"+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
