@@ -36,5 +36,6 @@
     <string name="pref_app_name">Préférences</string>
     <string name="action_deconnexion">Déconnexion</string>
     <string name="alert_label">Alert Dialog</string>
+    <string name="wifi_error">Pas de connexion Wi-Fi.</string>
 
 </resources>

@@ -27,5 +27,6 @@
     <color name="grey_low">#FF242424</color>
     <color name="green">#FF00AA00</color>
     <color name="transparent">#00000000</color>
+    <color name="alert_wifi">#990000</color>
 
 </resources>

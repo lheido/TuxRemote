@@ -5,6 +5,8 @@ import android.content.Context;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -19,6 +21,8 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.devspark.appmsg.AppMsg;
 
 import java.util.ArrayList;
 
@@ -78,6 +82,26 @@ public class MainActivity extends ActionBarActivity
             // Apply the custom View to the ActionBar
             getSupportActionBar().setCustomView(view, new ActionBar.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        }
+
+        ConnectivityManager connManager = (ConnectivityManager) Global.getStaticContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (mWifi != null && !mWifi.isConnected()) {
+            AppMsg.Style style = new AppMsg.Style(AppMsg.LENGTH_STICKY, R.color.alert_wifi);
+            AppMsg provided = AppMsg.makeText(this, R.string.wifi_error, style);
+            provided.getView()
+                    .setOnClickListener(new CancelAppMsg(provided));
+            provided.show();
+        }
+    }
+    static class CancelAppMsg implements View.OnClickListener {
+        private final AppMsg mAppMsg;
+        CancelAppMsg(AppMsg appMsg) {
+            mAppMsg = appMsg;
+        }
+        @Override
+        public void onClick(View v) {
+            mAppMsg.cancel();
         }
     }
 
