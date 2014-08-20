@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -332,6 +333,12 @@ public class NavigationDrawerFragment extends Fragment {
         try {
             SSHAsyncTask task = new SSHAsyncTask(new Command("downloadFile", "cat ~/.config/TuxRemote/config.xml", null)) {
                 @Override
+                protected void onPreExecute(){
+                    try{
+                        getActivity().setProgressBarIndeterminateVisibility(true);
+                    }catch (Exception e){}
+                }
+                @Override
                 protected void onProgressUpdate(BashReturn... prog) {
                     ArrayList<String> retour = prog[0].getBashReturn();
                     String content = "";
@@ -339,10 +346,33 @@ public class NavigationDrawerFragment extends Fragment {
                         content += line;
                     }
                     TuxRemoteUtils.saveFileToInternalStorage(Global.getStaticContext(), "config.xml", content);
+                    mCallbacks.volumeCmdsFromConfigFile(new ConfigXML(context).getStaticCommand("Volume"));
+                    mCallbacks.shutdownCmdFromConfigFile(new ConfigXML(context).getStaticCommand("Shutdown"));
+//                    savePNG();
                     updateAppList();
+                }
+                @Override
+                protected void onPostExecute(Boolean result){
+                    try{
+                        getActivity().setProgressBarIndeterminateVisibility(false);
+                    }catch (Exception e){}
                 }
             };
             task.execTask();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void savePNG() {
+        try {
+            ArrayList<App> configList = new ConfigXML(context).getAppList();
+            for (final App app : configList) {
+                if(app.getIcon() != null) {
+                    TuxRemoteUtils.scpTask task = new TuxRemoteUtils.scpTask(app.getIcon());
+                    task.execTask();
+                }
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -405,5 +435,9 @@ public class NavigationDrawerFragment extends Fragment {
          */
         void onNavigationDrawerItemSelected(int position, App app);
         void testCurrentApp(ArrayList<App> appList);
+
+        void volumeCmdsFromConfigFile(HashMap<String, String> volume);
+
+        void shutdownCmdFromConfigFile(HashMap<String, String> shutdown);
     }
 }

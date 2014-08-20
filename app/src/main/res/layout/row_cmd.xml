@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/cmd_name"
         android:layout_alignTop="@+id/cmd_name"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/default_cmd_icon"
         android:contentDescription="@string/cmd_icon"/>
     <TextView
         android:id="@+id/cmd_name"

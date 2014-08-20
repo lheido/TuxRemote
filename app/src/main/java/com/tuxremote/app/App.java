@@ -1,6 +1,7 @@
 package com.tuxremote.app;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -48,13 +49,14 @@ public class App {
         if(this.icon != null){
             try {
                 File filePath = context.getFileStreamPath(this.icon);
-                Picasso.with(context).load(filePath).fit().centerCrop().into(view);
+                Picasso.with(context).load(this.icon).fit().centerCrop().into(view);
             }catch (Exception e){
                 e.printStackTrace();
             }
-        }else{
-            Picasso.with(context).load(TuxRemoteUtils.DEFAULT_ICON_APP).fit().centerCrop().into(view);
         }
+//        else{
+//            Picasso.with(context).load(TuxRemoteUtils.DEFAULT_ICON_APP).fit().centerCrop().into(view);
+//        }
     }
 
     /**
@@ -99,5 +101,9 @@ public class App {
 
     public String getWmctrlName() {
         return wmctrlName;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 }

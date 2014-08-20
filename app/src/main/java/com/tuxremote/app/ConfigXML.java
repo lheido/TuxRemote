@@ -147,4 +147,34 @@ public class ConfigXML {
         }
         return app;
     }
+
+    public HashMap<String, String> getStaticCommand(String name){
+        HashMap<String, String> cmds = new HashMap<String, String>();
+        int eventType = 0;
+        try {
+            xpp.setInput(context.openFileInput(TuxRemoteUtils.CONFIG_FILE), null);
+            eventType = xpp.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType){
+                    case XmlPullParser.START_DOCUMENT: break;
+                    case XmlPullParser.START_TAG:
+                        if(xpp.getName().equals(name)) {
+                            int count = xpp.getAttributeCount();
+                            for (int i = 0; i < count; i++) {
+                                cmds.put(xpp.getAttributeName(i), xpp.getAttributeValue(i));
+                            }
+                        }
+                        break;
+                    case XmlPullParser.END_TAG: break;
+                }
+                eventType = xpp.next();
+            }
+
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cmds;
+    }
 }

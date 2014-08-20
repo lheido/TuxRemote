@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.devspark.appmsg.AppMsg;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
@@ -50,6 +51,9 @@ public class MainActivity extends ActionBarActivity
 
     protected App currentApp = null;
     private Context context;
+    private String setVolumeCmd = null;
+    private String getVolumeCmd = null;
+    private String shudownCmd = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,12 +134,32 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    @Override
+    public void volumeCmdsFromConfigFile(HashMap<String, String> volume) {
+        if(volume.containsKey("set"))
+            setVolumeCmd = volume.get("set");
+        if(volume.containsKey("get")) {
+            getVolumeCmd = volume.get("get");
+            // TO-DO : retrieve current volume
+        }
+
+    }
+
+    @Override
+    public void shutdownCmdFromConfigFile(HashMap<String, String> shutdown) {
+        if(shutdown.containsKey("cmd"))
+            shudownCmd = shutdown.get("cmd");
+    }
+
     public void onDisconnect(){
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, ConnectFragment.newInstance())
                 .commit();
         Global.setUserIsConnected(false);
+        setVolumeCmd = null;
+        getVolumeCmd = null;
+        shudownCmd = null;
     }
 
     @Override
@@ -207,30 +231,7 @@ public class MainActivity extends ActionBarActivity
             // Set the progress to the current volume level
             mVolumeControls.setProgress(currentVolume);
         }
-//        else if(id == R.id.action_restart){
-//            final MainActivity act = this;
-//            TuxRemoteUtils.TuxRemoteDialog alert = new TuxRemoteUtils.TuxRemoteDialog(this, R.layout.alert_dialog, "Redémarrer"){
-//                @Override
-//                public void customInit() {
-//                    TextView label = (TextView)findViewById(R.id.alert_label);
-//                    label.setText("Voulez vous vraiment, vraiment, mais alors vraiment redémarrer le serveur?");
-//                }
-//
-//                @Override
-//                public void customCancel() {}
-//
-//                @Override
-//                public void customOk() {
-//                    Log.v("RESTART", "Test Command");
-//                    SSHAsyncTask task = new SSHAsyncTask(act, new Command("restart", TuxRemoteUtils.CMD_RESTART, null));
-//                    task.execute();
-//                }
-//            };
-//            alert.show();
-//            return true;
-//        }
         else if(id == R.id.action_shutdown){
-            final MainActivity act = this;
             TuxRemoteUtils.TuxRemoteDialog alert = new TuxRemoteUtils.TuxRemoteDialog(this, R.layout.alert_dialog, "Eteindre"){
                 @Override
                 public void customInit() {
@@ -243,8 +244,12 @@ public class MainActivity extends ActionBarActivity
 
                 @Override
                 public void customOk() {
-                    SSHAsyncTask task = new SSHAsyncTask(new Command("shutDown", TuxRemoteUtils.CMD_SHUTDOWN, null));
-                    task.execute();
+                    if(shudownCmd != null) {
+                        SSHAsyncTask task = new SSHAsyncTask(new Command("Shutdown", shudownCmd, null));
+                        task.execute();
+                    }else{
+                        Toast.makeText(context, R.string.no_shutdown_cmd, Toast.LENGTH_SHORT).show();
+                    }
                 }
             };
             alert.show();
@@ -313,12 +318,15 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-//        Toast.makeText(this, "volume = "+currentVolume, Toast.LENGTH_SHORT).show();
-        String cmd = TuxRemoteUtils.CMD_VOLUME;
-        if(currentVolume == 0) cmd += "mute 0%";
-        else cmd += "unmute "+currentVolume+"%";
-        SSHAsyncTask task = new SSHAsyncTask(new Command("volume", cmd, null));
-        task.execTask();
+        if(setVolumeCmd != null) {
+            String cmd = new String(setVolumeCmd);
+            if (currentVolume == 0) cmd += " mute 0%";
+            else cmd += " unmute " + currentVolume + "%";
+            SSHAsyncTask task = new SSHAsyncTask(new Command("volume", cmd, null));
+            task.execTask();
+        }else{
+            Toast.makeText(context, R.string.no_volume_cmd, Toast.LENGTH_SHORT).show();
+        }
         // Remove the SeekBar from the ActionBar
         //mShowingControls = false;
         //getSupportActionBar().setDisplayShowCustomEnabled(false);

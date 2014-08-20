@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -18,9 +20,7 @@ public class TuxRemoteUtils {
 //    public final static String CMD_RESTART  = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart";
 //    public final static String CMD_SHUTDOWN = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager  org.freedesktop.ConsoleKit.Manager.Stop";
     public final static String CMD_SHUTDOWN = "sudo $HOME/.config/TuxRemote/TuxRemote-shutdown";
-    public final static String CMD_VOLUME = "amixer -D pulse sset Master ";
-
-    public final static String SPLIT_CHAR = ":";
+    public final static String ICONS_PATH = "~/.config/TuxRemote/icons/";
     public final static int DEFAULT_CLOSE_RES = R.drawable.ic_action_content_remove;
     public final static int DEFAULT_ICON_APP = R.drawable.ic_launcher;
     public static final String SERVERS_LIST = "servers_list";
@@ -124,5 +124,28 @@ public class TuxRemoteUtils {
 
     public static SharedPreferences getPref(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public static class scpTask extends AsyncTask<Void, Void, Void>{
+
+        private final String fileName;
+
+        public scpTask(String fileName){
+            this.fileName = fileName;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Global.session.scpImage(Global.getStaticContext(), fileName);
+            return null;
+        }
+
+        public void execTask() {
+            if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
+                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                execute();
+            }
+        }
     }
 }

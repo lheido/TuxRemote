@@ -55,7 +55,7 @@ public class AppListViewAdapter extends BaseAdapter {
         App app = this.items.get(position);
         holder.app_name.setText(app.getName());
         holder.window_title.setText(app.getTitle());
-//        app.setIconToView(context, holder.image);
+        app.setIconToView(context, holder.image);
 
         return convertView;
     }

@@ -37,5 +37,7 @@
     <string name="action_deconnexion">Déconnexion</string>
     <string name="alert_label">Alert Dialog</string>
     <string name="wifi_error">Pas de connexion Wi-Fi.</string>
+    <string name="no_shutdown_cmd">Error: shutdownCmd is null</string>
+    <string name="no_volume_cmd">Error: (set/get)volumeCmd</string>
 
 </resources>
