@@ -32,6 +32,7 @@ public class AppFragment extends Fragment {
     private static final String ARG_PID = "app_pid";
     private static final String ARG_NUMBER = "currentSelectedItem";
     public static final String TAG="AppFragment";
+    private static final String ARG_STATIC_APP = "static_app";
     private AppAdapter adapter;
     private ListView listView;
     private ArrayList<Command> cmds;
@@ -42,6 +43,7 @@ public class AppFragment extends Fragment {
     private Context context;
     private AppFragmentCallbacks mCallbacks;
     private int number;
+    private boolean isStaticApp;
 //    private FadingActionBarHelperBase mFadingHelper;
 
     /**
@@ -54,6 +56,7 @@ public class AppFragment extends Fragment {
         args.putString(ARG_HEXAID, app.getHexaId());
         args.putString(ARG_TITLE, app.getTitle());
         args.putString(ARG_PID, app.getPid());
+        args.putBoolean(ARG_STATIC_APP, app.isStaticApp());
         args.putInt(ARG_NUMBER, position);
         fragment.setArguments(args);
         return fragment;
@@ -71,7 +74,7 @@ public class AppFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         cmds = new ArrayList<Command>();
-        cmds.addAll(loadFromConfigFile(Global.getStaticContext(), appName, appHexaId));
+        cmds.addAll(loadFromConfigFile(Global.getStaticContext(), appName, appHexaId, isStaticApp));
 //        View view = mFadingHelper.createView(inflater);
 //        ImageView img = (ImageView) view.findViewById(R.id.image_header);
 //        Picasso.with(getActivity().getApplicationContext()).load(TuxRemoteUtils.DEFAULT_ICON_APP).fit().centerInside().into(img);
@@ -93,9 +96,11 @@ public class AppFragment extends Fragment {
         return view;
     }
 
-    private static ArrayList<Command> loadFromConfigFile(Context context, String appName, String appHexaId) {
+    private static ArrayList<Command> loadFromConfigFile(Context context, String appName, String appHexaId, boolean isStaticApp) {
         ArrayList<Command> list = new ConfigXML(context).getCommandList(appName);
-        list.add(Command.cmdClose(appHexaId));
+        if(!isStaticApp) {
+            list.add(Command.cmdClose(appHexaId));
+        }
         return list;
     }
 
@@ -107,6 +112,7 @@ public class AppFragment extends Fragment {
             appHexaId = getArguments().getString(ARG_HEXAID);
             appTitle = getArguments().getString(ARG_TITLE);
             appPid = getArguments().getString(ARG_PID);
+            isStaticApp = getArguments().getBoolean(ARG_STATIC_APP);
             number = getArguments().getInt(ARG_NUMBER);
         }
         ((MainActivity) activity).onSectionAttached(appName);

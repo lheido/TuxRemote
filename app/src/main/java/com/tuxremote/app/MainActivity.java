@@ -7,10 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
@@ -122,7 +122,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void testCurrentApp(ArrayList<App> appList) {
-        if(currentApp != null){
+        if(currentApp != null && !currentApp.isStaticApp() && appList != null){
             int i = 0;
             while(i < appList.size() && currentApp.getHexaId().equals(appList.get(i).getHexaId())) i++;
             if(i == appList.size() && !currentApp.getHexaId().equals(appList.get(i-1).getHexaId())){
@@ -160,6 +160,7 @@ public class MainActivity extends ActionBarActivity
         setVolumeCmd = null;
         getVolumeCmd = null;
         shudownCmd = null;
+        mNavigationDrawerFragment.clearAppList();
     }
 
     @Override
@@ -223,6 +224,17 @@ public class MainActivity extends ActionBarActivity
                 startActivity(intent);
             }
             return true;
+        }
+        else if(id == R.id.test){
+            try {
+                FileSelectorDialog dialog = new FileSelectorDialog(this) {
+                    @Override
+                    public void customItemClick(File file, String currentDir, String currentParent) {
+                        Log.v("customItemClick", currentDir+", "+currentParent+", "+file.getFileName());
+                    }
+                };
+                dialog.show();
+            }catch (Exception e){e.printStackTrace();}
         }
         else if(id == R.id.action_global_volume){
             // Toggle the custom View's visibility

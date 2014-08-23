@@ -33,9 +33,13 @@ public class SSHAsyncTask extends AsyncTask<Void, BashReturn, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
-            BashReturn retour = Global.session.SetCommand(cmd.getCmd());
-            if(retour != null) {
-                publishProgress(retour);
+            if(!cmd.getCmd().contains("&")){
+                BashReturn retour = Global.session.SetCommand(cmd.getCmd());
+                if(retour != null) {
+                    publishProgress(retour);
+                }
+            }else{
+                Global.session.setCommandNoReturn(cmd.getCmd());
             }
             return true;
         }catch (Exception e){

@@ -1,6 +1,7 @@
 package com.tuxremote.app;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -21,6 +22,7 @@ public class ConfigXML {
     private static final String CMD_SHELL = "cmd";
     private static final String CMD_ICON = "icon";
     private static final String COMMAND = "Command";
+    private static final String STATIC_APPLICATION = "StaticApplication";
     private final Context context;
     private XmlPullParser xpp = null;
     private XmlPullParserFactory factory = null;
@@ -89,6 +91,35 @@ public class ConfigXML {
         return appList;
     }
 
+    public ArrayList<App> getStaticAppList(){
+        ArrayList<App> appList = new ArrayList<App>();
+        int eventType = 0;
+        try {
+            xpp.setInput(context.openFileInput(TuxRemoteUtils.CONFIG_FILE), null);
+            eventType = xpp.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType){
+                    case XmlPullParser.START_DOCUMENT: break;
+                    case XmlPullParser.START_TAG:
+                        if(xpp.getName().equals(STATIC_APPLICATION)){
+                            App app = getApp();
+                            app.setStaticApp(true);
+                            appList.add(app);
+                        }
+                        break;
+                    case XmlPullParser.END_TAG: break;
+                }
+                eventType = xpp.next();
+            }
+
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return appList;
+    }
+
     public ArrayList<Command> getCommandList(String appName){
         ArrayList<Command> cmdList = new ArrayList<Command>();
         App currentApp = null;
@@ -100,7 +131,7 @@ public class ConfigXML {
                 switch (eventType){
                     case XmlPullParser.START_DOCUMENT: break;
                     case XmlPullParser.START_TAG:
-                        if(xpp.getName().equals(APPLICATION)){
+                        if(xpp.getName().equals(APPLICATION) || xpp.getName().equals(STATIC_APPLICATION)){
                             currentApp = getApp();
                         }else if(currentApp != null && currentApp.getName().equals(appName) && xpp.getName().equals(COMMAND)){
                             cmdList.add(getCommand());

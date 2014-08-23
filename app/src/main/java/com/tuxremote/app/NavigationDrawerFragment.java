@@ -96,6 +96,9 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
             @Override
             public EnhancedListView.Undoable onDismiss(EnhancedListView enhancedListView, final int position) {
+                final App current = listApp.get(position);
+                if(current.isStaticApp())
+                    return null;
                 final App item = listApp.remove(position);
                 adapter.notifyDataSetChanged();
                 return new EnhancedListView.Undoable() {
@@ -115,7 +118,7 @@ public class NavigationDrawerFragment extends Fragment {
         });
         mDrawerListView.enableSwipeToDismiss();
         mDrawerListView.setSwipeDirection(EnhancedListView.SwipeDirection.END);
-        mDrawerListView.setUndoHideDelay(5000);
+        mDrawerListView.setUndoHideDelay(3000);
         mDrawerListView.setRequireTouchBeforeDismiss(false);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -396,8 +399,13 @@ public class NavigationDrawerFragment extends Fragment {
                             listApp.add(a);
                         }
                     }
-                    mCallbacks.testCurrentApp(listApp);
+                    ArrayList<App> staticAppList = new ConfigXML(context).getStaticAppList();
+                    for (App app : staticAppList){
+                        listApp.add(app);
+                    }
                     notify.sendEmptyMessage(0);
+                    if(mCallbacks != null)
+                        mCallbacks.testCurrentApp(listApp);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -418,6 +426,13 @@ public class NavigationDrawerFragment extends Fragment {
     public void clearScheduler() {
         if(scheduler != null && !scheduler.isShutdown()){
             scheduler.shutdown();
+        }
+    }
+
+    public void clearAppList(){
+        if(listApp != null){
+            listApp.clear();
+            adapter.notifyDataSetChanged();
         }
     }
 

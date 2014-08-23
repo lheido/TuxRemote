@@ -19,6 +19,10 @@
                 <!--android:title="@string/action_restart"-->
                 <!--app:showAsAction="never"-->
                 <!--/>-->
+            <item android:id="@+id/test"
+                android:title="test"
+                app:showAsAction="never"
+                />
             <item android:id="@+id/action_shutdown"
                 android:title="@string/action_shutdown"
                 app:showAsAction="never"

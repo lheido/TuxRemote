@@ -15,6 +15,7 @@ public class App {
     private String pid = null;
     private String title = null;
     private String icon = null;
+    private boolean staticApp = false;
 
     /**
      * Constructor
@@ -105,5 +106,13 @@ public class App {
 
     public String getIcon() {
         return icon;
+    }
+
+    public boolean isStaticApp() {
+        return staticApp;
+    }
+
+    public void setStaticApp(boolean staticApp) {
+        this.staticApp = staticApp;
     }
 }
