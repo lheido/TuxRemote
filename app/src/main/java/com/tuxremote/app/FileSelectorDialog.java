@@ -60,26 +60,30 @@ public abstract class FileSelectorDialog extends Dialog {
 
     private void loadFileList(String dir){
         fileList.clear();
-        SSHAsyncTask fileTask = new SSHAsyncTask(new Command("ls", "cd "+dir+"; ls -1p . | awk -v p=$(pwd) -v q=$(cd .. ; pwd) 'BEGIN{print p \"\\n\" q}{print $0}'", null)){
+        SSHAsyncTask fileTask = new SSHAsyncTask(new Command("ls", "cd '"+dir+"' ; ls -1p . | awk -v p=\"$(pwd)\" -v q=\"$(cd .. ; pwd)\" 'BEGIN{print p \"\\n\" q}{print $0}'", null)){
             @Override
             protected void onPreExecute () {
                 super.onPreExecute();
-                progress.setVisibility(View.VISIBLE);
+                try {
+                    progress.setVisibility(View.VISIBLE);
+                }catch (Exception e){e.printStackTrace();}
             }
             @Override
             protected void onProgressUpdate (BashReturn... prog) {
-                if(prog[0] != null){
-                    ArrayList<String> liste = prog[0].getBashReturn();
-                    currentDir = liste.remove(0)+"/";
-                    currentParent = liste.remove(0)+"/";
-                    liste.add(0, "..");
-                    for (String line : liste){
-                        fileList.add(getFileByLine(line));
-                        adapter.notifyDataSetChanged();
+                try {
+                    if (prog[0] != null) {
+                        ArrayList<String> liste = prog[0].getBashReturn();
+                        currentDir = liste.remove(0) + "/";
+                        currentParent = liste.remove(0) + "/";
+                        liste.add(0, "..");
+                        for (String line : liste) {
+                            fileList.add(getFileByLine(line));
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                     fileListView.smoothScrollToPosition(0);
-                }
-                progress.setVisibility(View.GONE);
+                    progress.setVisibility(View.GONE);
+                }catch (Exception e){e.printStackTrace();}
             }
         };
         fileTask.execTask();
