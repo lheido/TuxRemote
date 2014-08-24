@@ -25,10 +25,10 @@ public class TuxRemoteUtils {
 
 //    public final static String CMD_RESTART  = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart";
 //    public final static String CMD_SHUTDOWN = "dbus-send --system --print-reply  --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager  org.freedesktop.ConsoleKit.Manager.Stop";
-    public final static String CMD_SHUTDOWN = "sudo $HOME/.config/TuxRemote/TuxRemote-shutdown";
+//    public final static String CMD_SHUTDOWN = "sudo $HOME/.config/TuxRemote/TuxRemote-shutdown";
     public final static String ICONS_PATH = "~/.config/TuxRemote/icons/";
     public final static int DEFAULT_CLOSE_RES = R.drawable.ic_action_content_remove;
-    public final static int DEFAULT_ICON_APP = R.drawable.ic_launcher;
+//    public final static int DEFAULT_ICON_APP = R.drawable.ic_launcher;
     public static final String SERVERS_LIST = "servers_list";
     public static final String PREF_SPLIT = "°SPLIT°°";
     public static final String CONFIG_FILE = "config.xml";

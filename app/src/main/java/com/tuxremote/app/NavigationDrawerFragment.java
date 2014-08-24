@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
@@ -68,6 +69,9 @@ public class NavigationDrawerFragment extends Fragment {
     private Context context;
     private ScheduledExecutorService scheduler = null;
     protected static Handler notify;
+    private ProgressBar progress;
+    private Handler notifyProgress;
+    private boolean isProgress = false;
 
     public NavigationDrawerFragment() {
     }
@@ -91,61 +95,76 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
             Bundle savedInstanceState) {
-        mDrawerListView = (EnhancedListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
-            @Override
-            public EnhancedListView.Undoable onDismiss(EnhancedListView enhancedListView, final int position) {
-                final App current = listApp.get(position);
-                if(current.isStaticApp())
-                    return null;
-                final App item = listApp.remove(position);
-                adapter.notifyDataSetChanged();
-                return new EnhancedListView.Undoable() {
-                    @Override
-                    public void undo() {
-                        listApp.add(position, item);
-                        adapter.notifyDataSetChanged();
-                    }
-                    @Override
-                    public void discard() {
-                        Command cmd = Command.cmdClose(item.getHexaId());
-                        SSHAsyncTask task = new SSHAsyncTask(cmd);
-                        task.execTask();
-                    }
-                };
-            }
-        });
-        mDrawerListView.enableSwipeToDismiss();
-        mDrawerListView.setSwipeDirection(EnhancedListView.SwipeDirection.END);
-        mDrawerListView.setUndoHideDelay(3000);
-        mDrawerListView.setRequireTouchBeforeDismiss(false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        mDrawerListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(context, "long press", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-        listApp = new ArrayList<App>();
-        adapter = new AppListViewAdapter(getActivity().getApplicationContext(), listApp);
-        mDrawerListView.setAdapter(adapter);
+        View view = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        if(view != null) {
+            mDrawerListView = (EnhancedListView) view.findViewById(R.id.app_list);
+            progress = (ProgressBar) view.findViewById(R.id.progress);
+            progress.setIndeterminate(true);
+            progress.setVisibility(View.GONE);
+//            mDrawerListView = (EnhancedListView) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+            mDrawerListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
+                @Override
+                public EnhancedListView.Undoable onDismiss(EnhancedListView enhancedListView, final int position) {
+                    final App current = listApp.get(position);
+                    if (current.isStaticApp())
+                        return null;
+                    final App item = listApp.remove(position);
+                    adapter.notifyDataSetChanged();
+                    return new EnhancedListView.Undoable() {
+                        @Override
+                        public void undo() {
+                            listApp.add(position, item);
+                            adapter.notifyDataSetChanged();
+                        }
 
-        notify = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                adapter.notifyDataSetChanged();
-            }
-        };
+                        @Override
+                        public void discard() {
+                            Command cmd = Command.cmdClose(item.getHexaId());
+                            SSHAsyncTask task = new SSHAsyncTask(cmd);
+                            task.execTask();
+                        }
+                    };
+                }
+            });
+            mDrawerListView.enableSwipeToDismiss();
+            mDrawerListView.setSwipeDirection(EnhancedListView.SwipeDirection.END);
+            mDrawerListView.setUndoHideDelay(3000);
+            mDrawerListView.setRequireTouchBeforeDismiss(false);
+            mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    selectItem(position);
+                }
+            });
+            mDrawerListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Toast.makeText(context, "long press", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+            listApp = new ArrayList<App>();
+            adapter = new AppListViewAdapter(getActivity().getApplicationContext(), listApp);
+            mDrawerListView.setAdapter(adapter);
 
-//        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        return mDrawerListView;
+            notify = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    adapter.notifyDataSetChanged();
+                }
+            };
+            notifyProgress = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    int visibility;
+                    if(isProgress) visibility = View.GONE;
+                    else visibility = View.VISIBLE;
+                    isProgress = ! isProgress;
+                    progress.setVisibility(visibility);
+                }
+            };
+        }
+        return view;
     }
 
     public boolean isDrawerOpen() {
@@ -390,10 +409,12 @@ public class NavigationDrawerFragment extends Fragment {
         return new Runnable() {
             public void run() {
                 try {
+                    listApp.clear();
+                    notify.sendEmptyMessage(0);
+                    notifyProgress.sendEmptyMessage(0);
                     ArrayList<App> configList = new ConfigXML(context).getAppList();
                     BashReturn retour = Global.session.SetCommand(TuxRemoteUtils.CMD_WMCTRL);
                     ArrayList<App> wmctrlList = TuxRemoteUtils.getAppListFromWmctrl(retour.getBashReturn());
-                    listApp.clear();
                     for (App a : wmctrlList) {
                         if(isAvailableApp(a, configList)) {
                             listApp.add(a);
@@ -404,6 +425,7 @@ public class NavigationDrawerFragment extends Fragment {
                         listApp.add(app);
                     }
                     notify.sendEmptyMessage(0);
+                    notifyProgress.sendEmptyMessage(0);
                     if(mCallbacks != null)
                         mCallbacks.testCurrentApp(listApp);
                 }catch (Exception e){

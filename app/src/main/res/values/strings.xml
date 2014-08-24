@@ -39,5 +39,11 @@
     <string name="wifi_error">Pas de connexion Wi-Fi.</string>
     <string name="no_shutdown_cmd">Error: shutdownCmd is null</string>
     <string name="no_volume_cmd">Error: (set/get)volumeCmd</string>
+    <string name="file_selector_home">Dossier par défaut pour l\'explorateur de fichiers</string>
+    <string name="default_file_selector_home" />
+    <string name="title_file_selector_home">Choisir le dossier par défaut</string>
+    <string name="auto_connect_off">pas de connection automatique</string>
+    <string name="auto_connect_on">Connection automatique au premier serveur qui repond</string>
+    <string name="auto_connect_title">Connection auto</string>
 
 </resources>

@@ -9,4 +9,17 @@
         android:summaryOn="@string/save_password_on"
         android:defaultValue="true"
         android:title="@string/save_password_title"/>
+
+    <EditTextPreference
+        android:key="file_selector_home"
+        android:summary="@string/file_selector_home"
+        android:defaultValue="@string/default_file_selector_home"
+        android:title="@string/title_file_selector_home"/>
+
+    <CheckBoxPreference
+        android:key="auto_connect"
+        android:summaryOff="@string/auto_connect_off"
+        android:summaryOn="@string/auto_connect_on"
+        android:defaultValue="false"
+        android:title="@string/auto_connect_title"/>
 </PreferenceScreen>

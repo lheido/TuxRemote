@@ -221,6 +221,15 @@ public class ConnectFragment extends Fragment {
                     e.printStackTrace();
                 }
                 adapter.notifyDataSetChanged();
+                try {
+                    if (server.isAvailable() && TuxRemoteUtils.getPref(Global.getStaticContext()).getBoolean("auto_connect", false)) {
+                        connexionTask test = new connexionTask(act, server);
+                        test.execTask();
+                    }
+                }catch (Exception e){
+                    Log.v("AutoConnection", "erreur auto connect");
+                    e.printStackTrace();
+                }
             }
         };
         task.execTask();

@@ -2,6 +2,7 @@ package com.tuxremote.app;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,8 @@ public abstract class FileSelectorDialog extends Dialog {
                 }
             }
         });
-        currentDir = "";
+        SharedPreferences pref = TuxRemoteUtils.getPref(Global.getStaticContext());
+        currentDir = pref.getString("file_selector_home", "");
         loadFileList(currentDir);
     }
 
