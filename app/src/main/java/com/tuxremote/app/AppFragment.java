@@ -18,6 +18,8 @@ import android.widget.TextView;
 //import com.manuelpeinado.fadingactionbar.extras.actionbarcompat.FadingActionBarHelper;
 //import com.squareup.picasso.Picasso;
 
+import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -86,10 +88,29 @@ public class AppFragment extends Fragment {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    if(cmds.get(position).getName().equals("close"))
+                    final Command command = cmds.get(position);
+                    if(command.getName().equals("close"))
                         mCallbacks.onCommandClose(number);
-                    SSHAsyncTask task = new SSHAsyncTask(cmds.get(position));
-                    task.execTask();
+                    if (command.getCmd().contains("%file%")) {
+                        try {
+                            FileSelectorDialog dialog = new FileSelectorDialog(Global.getStaticContext()) {
+                                @Override
+                                public void customItemClick(File file, String currentDir, String currentParent) {
+                                    if (!file.isDir()) {
+                                        Log.v("customItemClick", currentDir + file.getFileName());
+                                        command.setCmd(command.getCmd().replace("%file%", currentDir+file.getFileName()));
+                                        SSHAsyncTask task = new SSHAsyncTask(command);
+                                        task.execTask();
+                                    }
+                                    cancel();
+                                }
+                            };
+                            dialog.show();
+                        }catch (Exception e){e.printStackTrace();}
+                    }else{
+                        SSHAsyncTask task = new SSHAsyncTask(command);
+                        task.execTask();
+                    }
                 }
             });
         }

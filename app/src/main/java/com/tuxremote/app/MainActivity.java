@@ -225,17 +225,6 @@ public class MainActivity extends ActionBarActivity
             }
             return true;
         }
-        else if(id == R.id.test){
-            try {
-                FileSelectorDialog dialog = new FileSelectorDialog(this) {
-                    @Override
-                    public void customItemClick(File file, String currentDir, String currentParent) {
-                        Log.v("customItemClick", currentDir+", "+currentParent+", "+file.getFileName());
-                    }
-                };
-                dialog.show();
-            }catch (Exception e){e.printStackTrace();}
-        }
         else if(id == R.id.action_global_volume){
             // Toggle the custom View's visibility
             mShowingControls = !mShowingControls;

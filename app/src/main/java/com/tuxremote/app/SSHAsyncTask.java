@@ -33,13 +33,33 @@ public class SSHAsyncTask extends AsyncTask<Void, BashReturn, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
-            if(!cmd.getCmd().contains("&")){
-                BashReturn retour = Global.session.SetCommand(cmd.getCmd());
-                if(retour != null) {
-                    publishProgress(retour);
+            if(cmd.getCmd().contains("%file%")){
+                FileSelectorDialog dialog = new FileSelectorDialog(context) {
+                    @Override
+                    public void customItemClick(File file, String currentDir, String currentParent) {
+                        if(file.isDir()){
+                            String command = cmd.getCmd().replace("%file%", currentDir+file.getFileName());
+                            if(command.contains("&")){
+                                Global.session.setCommandNoReturn(command);
+                            }else{
+                                BashReturn retour = Global.session.SetCommand(command);
+                                if (retour != null) {
+                                    publishProgress(retour);
+                                }
+                            }
+                        }
+                    }
+                };
+                dialog.show();
+            }else {
+                if (!cmd.getCmd().contains("&")) {
+                    BashReturn retour = Global.session.SetCommand(cmd.getCmd());
+                    if (retour != null) {
+                        publishProgress(retour);
+                    }
+                } else {
+                    Global.session.setCommandNoReturn(cmd.getCmd());
                 }
-            }else{
-                Global.session.setCommandNoReturn(cmd.getCmd());
             }
             return true;
         }catch (Exception e){

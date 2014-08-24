@@ -48,4 +48,7 @@ public class Command {
         return cmd;
     }
 
+    public void setCmd(String cmd) {
+        this.cmd = cmd;
+    }
 }
