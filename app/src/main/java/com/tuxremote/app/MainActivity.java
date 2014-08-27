@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.appmsg.AppMsg;
+import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -141,6 +142,19 @@ public class MainActivity extends ActionBarActivity
             setVolumeCmd = volume.get("set");
         if(volume.containsKey("get")) {
             getVolumeCmd = volume.get("get");
+            SSHAsyncTask task = new SSHAsyncTask(new Command("getVolume", getVolumeCmd, null)){
+                @Override
+                protected void onProgressUpdate (BashReturn... prog) {
+                    if(prog[0] != null){
+                        try {
+                            ArrayList<String> retour = prog[0].getBashReturn();
+                            String volume = retour.get(0).replace("[", "").replace("]", "").replace("%", "");
+                            currentVolume = Integer.parseInt(volume);
+                        }catch (Exception e){e.printStackTrace();}
+                    }
+                }
+            };
+            task.execTask();
             // TO-DO : retrieve current volume
         }
 
