@@ -22,4 +22,17 @@
         android:summaryOn="@string/auto_connect_on"
         android:defaultValue="false"
         android:title="@string/auto_connect_title"/>
+
+    <CheckBoxPreference
+        android:key="button_volume_enabled"
+        android:summaryOn="@string/button_volume_on"
+        android:summaryOff="@string/button_volume_off"
+        android:defaultValue="false"/>
+
+    <EditTextPreference
+        android:dependency="button_volume_enabled"
+        android:key="interval_volume"
+        android:summary="@string/interval_volume_summary"
+        android:defaultValue="10"
+        android:inputType="number"/>
 </PreferenceScreen>

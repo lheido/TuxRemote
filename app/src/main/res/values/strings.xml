@@ -45,5 +45,8 @@
     <string name="auto_connect_off">pas de connection automatique</string>
     <string name="auto_connect_on">Connection automatique au premier serveur qui repond</string>
     <string name="auto_connect_title">Connection auto</string>
+    <string name="interval_volume_summary">Monter/Baisser le volume de ...</string>
+    <string name="button_volume_on">Les boutons de volume sont utilisables</string>
+    <string name="button_volume_off">Les boutons de volume gardent leurs fonctionnalitées de base</string>
 
 </resources>

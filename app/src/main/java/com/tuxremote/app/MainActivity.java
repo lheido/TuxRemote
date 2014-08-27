@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
@@ -319,6 +320,13 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        setVolumeTask();
+        // Remove the SeekBar from the ActionBar
+        //mShowingControls = false;
+        //getSupportActionBar().setDisplayShowCustomEnabled(false);
+    }
+
+    public void setVolumeTask(){
         if(setVolumeCmd != null) {
             String cmd = new String(setVolumeCmd);
             if (currentVolume == 0) cmd += " mute 0%";
@@ -328,9 +336,25 @@ public class MainActivity extends ActionBarActivity
         }else{
             Toast.makeText(context, R.string.no_volume_cmd, Toast.LENGTH_SHORT).show();
         }
-        // Remove the SeekBar from the ActionBar
-        //mShowingControls = false;
-        //getSupportActionBar().setDisplayShowCustomEnabled(false);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) && TuxRemoteUtils.getPref(context).getBoolean("button_volume_enabled", false)) {
+            try {
+                if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                    mVolumeControls.setProgress(currentVolume - Integer.parseInt(TuxRemoteUtils.getPref(context).getString("interval_volume", "5")));
+                    currentVolume = mVolumeControls.getProgress();
+                } else {
+                    mVolumeControls.setProgress(currentVolume + Integer.parseInt(TuxRemoteUtils.getPref(context).getString("interval_volume", "5")));
+                    currentVolume = mVolumeControls.getProgress();
+                }
+                setVolumeTask();
+            }catch (Exception e){e.printStackTrace();}
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
 
     public void setActionBarTitle(String actionBarTitle) {

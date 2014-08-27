@@ -267,40 +267,12 @@ public class SshSession {
             ((ChannelExec)channel).setCommand(commande);
             channel.setInputStream(null);
 
-//            ((ChannelExec)channel).setErrStream(System.err);
-//            InputStream in=channel.getInputStream();
-//            InputStream err= ((ChannelExec)channel).getErrStream();
-
             channel.connect();
-//            byte[] tmp=new byte[1024];
-//            while(true){
-//                while(in.available()>0){
-//                    int i=in.read(tmp, 0, 1024);
-//                    if(i>=0){
-//                        result=result.concat(new String(tmp, 0, i));
-//                    }
-//                }
-//                while(err.available()>0){
-//                    int i=err.read(tmp,0,1024);
-//                    if(i>=0){
-//                        erreur=erreur.concat(new String(tmp,0,i));
-//                    }
-//                }
-//                if(channel.isClosed()){
-//                    if(in.available()>0) continue;
-//                    //					System.out.println("exit-status: "+channel.getExitStatus());
-//                    break;
-//                }
-//                try{Thread.sleep(1000);}catch(Exception ee){}
-//            }
             channel.disconnect();
 
         } catch (JSchException e){
             e.printStackTrace();
         }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
 	public BashReturn SetCommand(String commande){
