@@ -14,17 +14,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-//import com.manuelpeinado.fadingactionbar.FadingActionBarHelperBase;
-//import com.manuelpeinado.fadingactionbar.extras.actionbarcompat.FadingActionBarHelper;
 //import com.squareup.picasso.Picasso;
 
-import com.tuxremote.app.TuxeRemoteSsh.BashReturn;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class AppFragment extends Fragment {
@@ -98,8 +89,9 @@ public class AppFragment extends Fragment {
                                 public void customItemClick(File file, String currentDir, String currentParent) {
                                     if (!file.isDir()) {
                                         Log.v("customItemClick", currentDir + file.getFileName());
-                                        command.setCmd(command.getCmd().replace("%file%", currentDir+file.getFileName()));
-                                        SSHAsyncTask task = new SSHAsyncTask(command);
+                                        Command cmd = command.copy();
+                                        cmd.setCmd(cmd.getCmd().replace("%file%", currentDir+file.getFileName()));
+                                        SSHAsyncTask task = new SSHAsyncTask(cmd);
                                         task.execTask();
                                     }
                                     cancel();
@@ -143,12 +135,6 @@ public class AppFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
         }
-//        mFadingHelper = new FadingActionBarHelper()
-//                .actionBarBackground(R.drawable.ab_background)
-//                .headerLayout(R.layout.app_header)
-//                .contentLayout(R.layout.app_cmds)
-//                .lightActionBar(false);
-//        mFadingHelper.initActionBar(activity);
     }
 
     private static class AppAdapter extends BaseAdapter {

@@ -25,6 +25,12 @@ public class Command {
         this.icon = icon;
     }
 
+    public Command copy(){
+        return new Command(
+                ""+this.name, ""+this.cmd, ""+this.icon
+        );
+    }
+
     public void setIconToView(Context context, ImageView view){
         if(this.icon != null) {
             if (this.icon.equals("close")) {

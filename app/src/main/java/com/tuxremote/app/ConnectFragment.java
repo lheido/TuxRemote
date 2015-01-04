@@ -31,7 +31,7 @@ public class ConnectFragment extends Fragment {
     private ArrayList<Server> servers;
     private ListView listView;
     private ConnectAdapter adapter;
-    private MainActivity act;
+//    private MainActivity act;
     private OnConnectCallbacks mCallbacks;
 
     public static ConnectFragment newInstance() {
@@ -63,7 +63,7 @@ public class ConnectFragment extends Fragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     // connect at this server <position>
                     Server s = servers.get(position);
-                    connexionTask test = new connexionTask(act,s);
+                    connexionTask test = new connexionTask((MainActivity)getActivity(),s);
                     test.execTask();
                 }
             });
@@ -83,7 +83,7 @@ public class ConnectFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        act = (MainActivity) activity;
+//        act = (MainActivity) activity;
         try {
             mCallbacks = (OnConnectCallbacks) activity;
         } catch (ClassCastException e) {
@@ -95,7 +95,7 @@ public class ConnectFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
-        act = null;
+//        act = null;
     }
 
     public void save_server(Server server){
@@ -106,7 +106,7 @@ public class ConnectFragment extends Fragment {
                 TuxRemoteUtils.PREF_SPLIT;
         if(server.getPassword() != null && pref.getBoolean("save_password", true))
             str += server.getPassword();
-        pref.edit().putString(server.getName(), str).commit();
+        pref.edit().putString(server.getName(), str).apply();
     }
 
     private void retrieveServersList(){
@@ -129,7 +129,7 @@ public class ConnectFragment extends Fragment {
 
     public void prefRemoveServer(String name){
         SharedPreferences pref = TuxRemoteUtils.getPref(Global.getStaticContext());
-        pref.edit().putStringSet(name, null).commit();
+        pref.edit().putStringSet(name, null).apply();
     }
 
     public void prefUpdateServersList(){
@@ -138,7 +138,7 @@ public class ConnectFragment extends Fragment {
         for (Server server : servers){
             set.add(server.getName());
         }
-        pref.edit().putStringSet(TuxRemoteUtils.SERVERS_LIST, set).commit();
+        pref.edit().putStringSet(TuxRemoteUtils.SERVERS_LIST, set).apply();
     }
 
     public void removeAllServers(){
@@ -148,7 +148,7 @@ public class ConnectFragment extends Fragment {
             editor.putStringSet(server.getName(), null);
         }
         editor.putStringSet(TuxRemoteUtils.SERVERS_LIST, null);
-        editor.commit();
+        editor.apply();
         servers.clear();
         adapter.notifyDataSetChanged();
     }
@@ -223,7 +223,7 @@ public class ConnectFragment extends Fragment {
                 adapter.notifyDataSetChanged();
                 try {
                     if (server.isAvailable() && TuxRemoteUtils.getPref(Global.getStaticContext()).getBoolean("auto_connect", false)) {
-                        connexionTask test = new connexionTask(act, server);
+                        connexionTask test = new connexionTask((MainActivity)getActivity(), server);
                         test.execTask();
                     }
                 }catch (Exception e){
@@ -308,7 +308,8 @@ public class ConnectFragment extends Fragment {
         protected void onPreExecute(){
             if(act.get() != null) {
                 try {
-                    act.get().setProgressBarIndeterminateVisibility(true);
+//                    act.get().setProgressBarIndeterminateVisibility(true);
+                    act.get().setSupportProgressBarIndeterminateVisibility(true);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -337,7 +338,8 @@ public class ConnectFragment extends Fragment {
             Toast.makeText(Global.getStaticContext(), message, Toast.LENGTH_SHORT).show();
             if(act.get() != null) {
                 try {
-                    act.get().setProgressBarIndeterminateVisibility(false);
+//                    act.get().setProgressBarIndeterminateVisibility(false);
+                    act.get().setSupportProgressBarIndeterminateVisibility(false);
                 }catch (Exception e){
                     e.printStackTrace();
                 }

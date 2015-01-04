@@ -60,7 +60,8 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setSupportProgressBarIndeterminate(true);
+//        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
         context = this;
         Global.setContext(context);
@@ -176,6 +177,7 @@ public class MainActivity extends ActionBarActivity
         getVolumeCmd = null;
         shudownCmd = null;
         mNavigationDrawerFragment.clearAppList();
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -202,7 +204,6 @@ public class MainActivity extends ActionBarActivity
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }

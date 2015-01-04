@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.2/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="d1bf02de1c56d942e7a9d093b8610ba1ef4128e3">
+        <dex dex="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/pre-dexed/debug/classes-4daa79be40facbacb53e3b06b5fa191661234b60.jar" />
+    </item>
+    <item
+        jar="/home/ubuntu/.gradle/caches/modules-2/files-2.1/com.jcraft/jsch/0.1.51/6ceee2696b07cc320d0e1aaea82c7b40768aca0f/jsch-0.1.51.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="6ceee2696b07cc320d0e1aaea82c7b40768aca0f">
+        <dex dex="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/pre-dexed/debug/jsch-0.1.51-7af640d5fc52a29137a9b8be4d00d085f647e9bf.jar" />
+    </item>
+    <item
+        jar="/home/ubuntu/sdk_android/extras/android/m2repository/com/android/support/support-annotations/21.0.2/support-annotations-21.0.2.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="99373741f99a0556ee293c41e8faa1ca3ae8a4e6">
+        <dex dex="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.2-c490510abf1c2fc294b76be547933e487c86aeed.jar" />
+    </item>
+    <item
+        jar="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.2/libs/internal_impl-21.0.2.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="962e8b12569c56dbdcf8367eb4eac8bb129cd18f">
+        <dex dex="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.2-33ef21880154854739406554b8879105f31afbd6.jar" />
+    </item>
+    <item
+        jar="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/exploded-aar/de.timroes.android/EnhancedListView/0.3.4/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="9cc616134ef0652ce7c534f27dbdc56115d5703c">
+        <dex dex="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/pre-dexed/debug/classes-1157bef2bc9df7ccbbc70aea19d5d6ef5b10bbc9.jar" />
+    </item>
+    <item
+        jar="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.2/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="7ae2d38807a43b2f2185ff4089a92c790b579e54">
+        <dex dex="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/pre-dexed/debug/classes-3f1d3d322e9d6c7c810c3559a14f573f5cd66a4c.jar" />
+    </item>
+    <item
+        jar="/home/ubuntu/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/pre-dexed/debug/library-2.4.0-346eeedcb345faf5d272eecbeebb7ca636e978d5.jar" />
+    </item>
+    <item
+        jar="/home/ubuntu/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.3.1/7ed01353649330c692473b85d5c64db4218338db/picasso-2.3.1.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="7ed01353649330c692473b85d5c64db4218338db">
+        <dex dex="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/pre-dexed/debug/picasso-2.3.1-cffde4bbf241096ed46576c3f84edaca79c32618.jar" />
+    </item>
+    <item
+        jar="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/exploded-aar/com.github.johnkil.android-appmsg/appmsg/1.2.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="398ec51345409df9e36a1de1a81f2b3ad5234bfb">
+        <dex dex="/home/ubuntu/projetsAndroid/TuxRemote/app/build/intermediates/pre-dexed/debug/classes-870cc383513d6135acb359f1a589dd7294b829ef.jar" />
+    </item>
+
+</items>

@@ -23,7 +23,7 @@ public abstract class FileSelectorDialog extends Dialog {
     private ArrayList<File> fileList;
     private FileListAdapter adapter;
     private ListView fileListView;
-    private String currentDir;
+    private static String currentDir;
     private String currentParent;
 
     public FileSelectorDialog(Context context) {
@@ -52,7 +52,7 @@ public abstract class FileSelectorDialog extends Dialog {
             }
         });
         SharedPreferences pref = TuxRemoteUtils.getPref(Global.getStaticContext());
-        currentDir = pref.getString("file_selector_home", "");
+        currentDir = (currentDir == null) ? pref.getString("file_selector_home", ""): currentDir;
         loadFileList(currentDir);
     }
 
